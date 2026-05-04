@@ -1,4 +1,4 @@
-yamlname: Atualizar dados do Lattes
+name: Atualizar dados do Lattes
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Baixar repositório
+      - name: Baixar repositorio
         uses: actions/checkout@v4
 
       - name: Configurar Python
@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Verificar se há XMLs do Lattes
+      - name: Verificar XMLs do Lattes
         id: check
         run: |
           count=$(find lattes/ -name "*.xml" -o -name "*.zip" 2>/dev/null | wc -l)
@@ -29,20 +29,20 @@ jobs:
         if: steps.check.outputs.count > 0
         run: python atualizar_lattes.py
 
-      - name: Verificar se houve mudanças
+      - name: Verificar mudancas
         id: changes
         run: |
           git diff --quiet data.js || echo "changed=true" >> $GITHUB_OUTPUT
 
-      - name: Fazer commit das atualizações
+      - name: Commit das atualizacoes
         if: steps.changes.outputs.changed == 'true'
         run: |
-          git config user.name  "Lattes Bot"
+          git config user.name "Lattes Bot"
           git config user.email "bot@laboratorio"
           git add data.js projetos_lattes.js
-          git commit -m "🔬 Atualização automática via Lattes [$(date '+%d/%m/%Y')]"
+          git commit -m "Atualizacao automatica via Lattes"
           git push
 
-      - name: Sem mudanças
+      - name: Sem mudancas
         if: steps.changes.outputs.changed != 'true'
-        run: echo "Nenhuma mudança detectada.
+        run: echo "Nenhuma mudanca detectada."
