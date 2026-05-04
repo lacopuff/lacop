@@ -150,8 +150,12 @@
     .pub-item:hover { background:var(--panel2); }
     .pub-item:hover::before { background:var(--cyan); }
     .pub-title   { font-family:'Fraunces',serif; font-size:.98rem; font-weight:500; color:var(--white); margin-bottom:.35rem; line-height:1.4; }
+    .pub-title a { color:var(--white); text-decoration:none; transition:color .2s; }
+    .pub-title a:hover { color:var(--cyan); }
     .pub-authors { font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
     .pub-venue   { font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--cyan-dim); }
+    .pub-doi     { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--cyan-dim); text-decoration:none; border-bottom:1px solid rgba(0,200,232,.25); padding-bottom:1px; transition:color .2s, border-color .2s; }
+    .pub-doi:hover { color:var(--cyan); border-color:var(--cyan); }
     .pub-year    { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:300; color:var(--faint); white-space:nowrap; }
 
     /* PATENTS */
@@ -538,15 +542,31 @@ function renderTeam() {
 }
 
 /* ── PUBLICATIONS ─────────────────────────────────── */
+function parsePubVenue(veiculo) {
+  // Extrai DOI do campo veiculo e separa do nome do periódico
+  const doiMatch = veiculo.match(/DOI:\s*(10\.\S+)/i);
+  if (!doiMatch) return { venue: veiculo, doi: null };
+  const doi      = doiMatch[1].replace(/[.,;)]+$/, ''); // remove pontuação final
+  const journal  = veiculo.replace(/·?\s*DOI:\s*\S+/i, '').trim().replace(/·\s*$/, '').trim();
+  return { venue: journal, doi };
+}
+
 function renderPublications() {
   document.getElementById('pub-list').innerHTML = PUBLICACOES.map((p, i) => {
+    const { venue, doi } = parsePubVenue(p.veiculo);
+    const doiUrl    = doi ? `https://doi.org/${doi}` : null;
+    const titleHtml = doiUrl
+      ? `<a href="${doiUrl}" target="_blank" rel="noopener">${p.titulo} ↗</a>`
+      : p.titulo;
+    const venueHtml = venue
+      + (doi ? ` · <a class="pub-doi" href="${doiUrl}" target="_blank" rel="noopener">DOI: ${doi}</a>` : '');
     const extra = i >= PUB_INICIAL ? ' collapsed' : '';
     return `
     <div class="pub-item${extra}" data-pub-index="${i}">
       <div>
-        <p class="pub-title">${p.titulo}</p>
+        <p class="pub-title">${titleHtml}</p>
         <p class="pub-authors">${p.autores}</p>
-        <p class="pub-venue">${p.veiculo}</p>
+        <p class="pub-venue">${venueHtml}</p>
       </div>
       <span class="pub-year">${p.ano}</span>
     </div>`;
