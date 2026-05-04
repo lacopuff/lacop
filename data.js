@@ -43,15 +43,15 @@ const LAB = {
 //
 const EQUIPE = [
   {
-    iniciais: "AS",
-    nome:  "Prof. Ana Silva",
-    cargo: "Coordenadora",
-    area:  "Comunicações ópticas coerentes e processamento de sinais.",
+    iniciais: "VNHS",
+    nome:  "Prof. DSc. Vinicius N. Henrique Silva",
+    cargo: "Pesquisador, Associado",
+    area:  "Comunicações ópticas sem fio, instrumentação e sensores",
   },
   {
-    iniciais: "CM",
-    nome:  "Dr. Carlos Mendes",
-    cargo: "Pesquisador Sênior",
+    iniciais: "APLB",
+    nome:  "Prof. DSc. Andrés Pablo Lopez Barbero",
+    cargo: "Pesquisador Sênior, full professor",
     area:  "Instrumentação fotônica e interrogação de sensores FBG.",
   },
   {
