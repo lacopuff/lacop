@@ -16,12 +16,13 @@
 
 // ── INFORMAÇÕES GERAIS DO LABORATÓRIO ─────────────────────
 const LAB = {
-  sigla:         "LACOP",
-  nomeCompleto:  "Laboratório de Comunicações Ópticas, Instrumentação e Sensores",
-  universidade:  "Universidade Federal Fluminense — Departamento de Engenharia de Telecomunicações",
-  descricao:     "Laboratório de pesquisa e desenvolvimento em comunicações ópticas, instrumentação e sensores",
-  email:         "viniciusnhs@id.uff.br",
-  endereco:      "Rua Passo da Pátria, 156, Bloco E, Sala 413/307, São Domingos, Niterói – Rio de Janeiro",
+  sigla:         "LabÓptica",
+  nomeCompleto:  "Laboratório de Fotônica e Sistemas Ópticos",
+  universidade:  "Universidade — Departamento de Engenharia",
+  descricao:     "Pesquisa fundamental e desenvolvimento aplicado em comunicações por fibra óptica, instrumentação fotônica e sistemas de sensoriamento distribuído — da bancada ao campo.",
+  email:         "laboratorio@universidade.br",
+  endereco:      "Prédio de Engenharia, Sala 00 — Campus Central, Cidade – Estado",
+  telefone:      "(xx) xxxx-xxxx",
   lattes:        "Link para perfis institucionais dos pesquisadores",
   // Métricas do hero (atualize manualmente)
   stats: {
@@ -36,56 +37,76 @@ const LAB = {
 // ── EQUIPE ─────────────────────────────────────────────────
 //
 //  Campos:
-//    iniciais   — 2 letras para o avatar (ex: "AS")
+//    iniciais   — 2 letras usadas como fallback se não tiver foto (ex: "AS")
 //    nome       — nome completo com título
 //    cargo      — ex: "Coordenadora", "Doutorando", "Bolsista IC"
 //    area       — frase curta descrevendo a linha de pesquisa
+//    foto       — (OPCIONAL) caminho da foto. Duas opções:
+//
+//                 Opção A — foto no próprio repositório:
+//                   1. No GitHub, crie uma pasta chamada "fotos"
+//                   2. Faça upload da foto lá (ex: ana-silva.jpg)
+//                   3. Use o caminho: foto: "fotos/ana-silva.jpg"
+//
+//                 Opção B — URL externa (ex: foto do site da universidade):
+//                   foto: "https://universidade.br/foto-ana.jpg"
+//
+//                 Se o campo "foto" for omitido ou a imagem não carregar,
+//                 as iniciais aparecem automaticamente como fallback.
 //
 const EQUIPE = [
   {
-    iniciais: "VNHS",
-    nome:  "Prof. DSc. Vinicius N. Henrique Silva",
-    cargo: "Pesquisador, Associado",
-    area:  "Comunicações ópticas sem fio, instrumentação e sensores",
+    iniciais: "AS",
+    foto:  "fotos/ana-silva.jpg",
+    nome:  "Prof. Ana Silva",
+    cargo: "Coordenadora",
+    area:  "Comunicações ópticas coerentes e processamento de sinais.",
   },
   {
-    iniciais: "APLB",
-    nome:  "Prof. DSc. Andrés Pablo Lopez Barbero",
-    cargo: "Pesquisador Sênior, full professor",
+    iniciais: "CM",
+    foto:  "fotos/carlos-mendes.jpg",
+    nome:  "Dr. Carlos Mendes",
+    cargo: "Pesquisador Sênior",
     area:  "Instrumentação fotônica e interrogação de sensores FBG.",
   },
   {
     iniciais: "LF",
+    foto:  "fotos/lucia-ferreira.jpg",
     nome:  "Dra. Lúcia Ferreira",
     cargo: "Pesquisadora",
     area:  "Sensoriamento distribuído DTS/DAS e aplicações industriais.",
   },
   {
     iniciais: "RS",
+    foto:  "fotos/rafael-santos.jpg",
     nome:  "Rafael Santos",
     cargo: "Doutorando",
     area:  "BOTDA de alta resolução para aplicações de SHM.",
   },
   {
     iniciais: "MC",
+    foto:  "fotos/marina-costa.jpg",
     nome:  "Marina Costa",
     cargo: "Mestranda",
     area:  "Redes FBG multiplexadas para monitoramento estrutural.",
   },
   {
     iniciais: "JP",
+    foto:  "fotos/joao-pedro.jpg",
     nome:  "João Pedro Lima",
     cargo: "Bolsista IC",
     area:  "Caracterização de componentes ópticos passivos.",
   },
   {
     iniciais: "BT",
+    foto:  "fotos/beatriz-torres.jpg",
     nome:  "Beatriz Torres",
     cargo: "Doutoranda",
     area:  "Não-linearidades em sistemas WDM e compensação digital.",
   },
   {
     iniciais: "FO",
+    foto:  "fotos/felipe-oliveira.jpg",
     nome:  "Felipe Oliveira",
     cargo: "Mestrando",
     area:  "Sensores de corrente baseados em efeito Faraday.",
