@@ -1,17 +1,23 @@
 name: Atualizar dados do Lattes
 
 on:
+  # Executa manualmente pelo GitHub (botão "Run workflow")
   workflow_dispatch:
+
+  # Executa automaticamente toda segunda-feira às 8h (horário de Brasília)
+  # Remova ou comente as 3 linhas abaixo para desativar a execução automática
   schedule:
-    - cron: '0 11 * * 1'
+    - cron: '0 11 * * 1'   # 11h UTC = 8h BRT (horário de Brasília)
 
 jobs:
   atualizar:
     runs-on: ubuntu-latest
+
     permissions:
-      contents: write
+      contents: write   # necessário para fazer commit de volta ao repositório
+
     steps:
-      - name: Baixar repositorio
+      - name: Baixar repositório
         uses: actions/checkout@v4
 
       - name: Configurar Python
@@ -19,30 +25,31 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Verificar XMLs do Lattes
+      - name: Verificar se há XMLs do Lattes
         id: check
         run: |
           count=$(find lattes/ -name "*.xml" -o -name "*.zip" 2>/dev/null | wc -l)
           echo "count=$count" >> $GITHUB_OUTPUT
+          echo "Arquivos encontrados na pasta lattes/: $count"
 
       - name: Executar atualizador
         if: steps.check.outputs.count > 0
         run: python atualizar_lattes.py
 
-      - name: Verificar mudancas
+      - name: Verificar se houve mudanças
         id: changes
         run: |
           git diff --quiet data.js || echo "changed=true" >> $GITHUB_OUTPUT
 
-      - name: Commit das atualizacoes
+      - name: Fazer commit das atualizações
         if: steps.changes.outputs.changed == 'true'
         run: |
-          git config user.name "Lattes Bot"
+          git config user.name  "Lattes Bot"
           git config user.email "bot@laboratorio"
-          git add data.js projetos_lattes.js
-          git commit -m "Atualizacao automatica via Lattes"
+          git add data.js
+          git commit -m "🔬 Atualização automática via Lattes [$(date '+%d/%m/%Y')]"
           git push
 
-      - name: Sem mudancas
+      - name: Sem mudanças
         if: steps.changes.outputs.changed != 'true'
-        run: echo "Nenhuma mudanca detectada."
+        run: echo "Nenhuma mudança detectada no data.js — commit não necessário."
