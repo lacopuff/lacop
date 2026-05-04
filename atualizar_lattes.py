@@ -398,16 +398,8 @@ def main():
     # Atualiza os blocos no data.js
     conteudo = atualizar_bloco(conteudo, "PUBLICACOES", pubs_js)
     conteudo = atualizar_bloco(conteudo, "PATENTES",    pat_js)
-
-    # Para projetos, gera arquivo separado para revisão (não sobrescreve automaticamente)
-    with open("projetos_lattes.js", "w", encoding="utf-8") as f:
-        f.write("// Projetos extraídos do Lattes — revise e copie para data.js\n")
-        f.write("// Gerado em: " + datetime.now().strftime("%d/%m/%Y %H:%M") + "\n\n")
-        f.write("const PROJETOS_LATTES = [\n")
-        f.write(proj_js)
-        f.write("\n];\n")
-    print(f"\n📋 Projetos salvos em 'projetos_lattes.js' para revisão manual.")
-    print("   (Projetos não são sobrescritos automaticamente — verifique antes de copiar)")
+    conteudo = atualizar_bloco(conteudo, "PROJETOS",    proj_js)
+    print(f"\n✅ Publicações, projetos e patentes atualizados no data.js.")
 
     # Salva o data.js atualizado
     # Faz backup primeiro
