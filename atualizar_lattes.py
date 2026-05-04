@@ -156,51 +156,105 @@ def extrair_publicacoes(root, ano_minimo=ANO_MINIMO):
     return pubs
 
 def extrair_projetos(root):
-    """Extrai projetos de pesquisa."""
+    """
+    Extrai projetos de pesquisa do Lattes.
+    Tenta múltiplos caminhos XML pois a estrutura varia entre versões do Lattes.
+    """
     projetos = []
-    for proj in root.iter("PROJETO-DE-PESQUISA"):
-        nome = limpar(proj.get("NOME-DO-PROJETO", ""))
-        if not nome:
-            continue
-        ano_inicio = limpar(proj.get("ANO-INICIO", ""))
-        ano_fim    = limpar(proj.get("ANO-FIM", ""))
-        situacao   = limpar(proj.get("SITUACAO", "")).upper()
-        descricao  = limpar(proj.get("DESCRICAO-DO-PROJETO", ""))
 
-        periodo = ano_inicio
-        if ano_fim:
-            periodo += f"–{ano_fim}"
-        elif situacao == "EM_ANDAMENTO" or not ano_fim:
-            periodo += "–atual"
+    # O Lattes armazena projetos em diferentes tags dependendo da versão e tipo
+    TAGS_PROJETO = [
+        "PROJETO-DE-PESQUISA",
+        "PROJETO-DE-EXTENSAO",
+        "PROJETO-DE-DESENVOLVIMENTO",
+    ]
 
-        status = "ongoing" if (situacao == "EM_ANDAMENTO" or not ano_fim) else "completed"
+    # Atributos possíveis para o nome do projeto (variam entre versões)
+    ATRIBS_NOME = ["NOME-DO-PROJETO", "TITULO-DO-PROJETO", "NOME"]
 
-        # Financiadores
-        financiadores = []
-        for fin in proj.iter("FINANCIADOR-DO-PROJETO"):
-            inst = limpar(fin.get("NOME-INSTITUICAO", ""))
-            if inst:
-                financiadores.append(inst)
-        fomento = "; ".join(financiadores) if financiadores else "Não especificado"
+    encontrados = 0
+    for tag in TAGS_PROJETO:
+        for proj in root.iter(tag):
+            encontrados += 1
+            # Tenta encontrar o nome em diferentes atributos
+            nome = ""
+            for atrib in ATRIBS_NOME:
+                nome = limpar(proj.get(atrib, ""))
+                if nome:
+                    break
+            if not nome:
+                continue
 
-        # Membros
-        membros = []
-        for m in proj.iter("INTEGRANTE-DO-PROJETO"):
-            nome_m = limpar(m.get("NOME-COMPLETO", ""))
-            papel  = limpar(m.get("FLAG-RESPONSAVEL", ""))
-            if nome_m:
-                sufixo = " (Coordenador)" if papel == "SIM" else ""
-                membros.append(nome_m + sufixo)
+            ano_inicio = limpar(proj.get("ANO-INICIO", ""))
+            ano_fim    = limpar(proj.get("ANO-FIM", ""))
+            situacao   = limpar(proj.get("SITUACAO", "")).upper()
+            descricao  = limpar(
+                proj.get("DESCRICAO-DO-PROJETO", "") or
+                proj.get("DESCRICAO", "") or ""
+            )
 
-        projetos.append({
-            "nome":       nome,
-            "status":     status,
-            "periodo":    periodo,
-            "descricao":  descricao,
-            "fomento":    fomento,
-            "membros":    membros,
-            "_fonte":     "lattes",
-        })
+            # Monta período
+            periodo = ano_inicio if ano_inicio else "?"
+            em_andamento = (
+                situacao == "EM_ANDAMENTO" or
+                not ano_fim
+            )
+            if ano_fim and not em_andamento:
+                periodo += f"–{ano_fim}"
+            else:
+                periodo += "–atual"
+
+            natureza = limpar(proj.get("NATUREZA", "")).upper()
+            if natureza == "DESENVOLVIMENTO":
+                tipo = "rd"
+            elif natureza == "ENSINO":
+                tipo = "academic"
+            else:
+                tipo = "academic"  # PESQUISA e outros
+
+            # Financiadores — tenta caminhos alternativos
+            financiadores = []
+            for fin in proj.iter("FINANCIADOR-DO-PROJETO"):
+                inst = limpar(
+                    fin.get("NOME-INSTITUICAO", "") or
+                    fin.get("NOME-ORGAO-FINANCIADOR", "") or ""
+                )
+                if inst:
+                    financiadores.append(inst)
+            fomento = "; ".join(financiadores) if financiadores else "Não especificado"
+
+            # Membros — tag correta no Lattes é INTEGRANTES-DO-PROJETO (plural)
+            membros = []
+            for m in proj.iter("INTEGRANTES-DO-PROJETO"):
+                nome_m = limpar(
+                    m.get("NOME-COMPLETO", "") or
+                    m.get("NOME", "") or ""
+                )
+                papel = limpar(m.get("FLAG-RESPONSAVEL", ""))
+                if nome_m:
+                    sufixo = " (Coordenador)" if papel == "SIM" else ""
+                    membros.append(nome_m + sufixo)
+
+            status = "ongoing" if em_andamento else "completed"
+
+            projetos.append({
+                "nome":      nome,
+                "tipo":      tipo,
+                "status":    status,
+                "periodo":   periodo,
+                "descricao": descricao,
+                "fomento":   fomento,
+                "membros":   membros,
+                "_fonte":    "lattes",
+                "_tag":      tag,
+            })
+
+    if encontrados == 0:
+        print("  ⚠️  Nenhuma tag de projeto encontrada no XML.")
+        print("     Verifique se o currículo tem projetos cadastrados no Lattes.")
+    else:
+        print(f"  ℹ️  {encontrados} nós de projeto encontrados, {len(projetos)} com nome válido.")
+
     return projetos
 
 def extrair_patentes(root):
@@ -268,12 +322,13 @@ def proj_to_js(p, idx, indent=2):
     sp = " " * indent
     pid = f"lattes-{idx+1}"
     equipe_js = json.dumps(p["membros"], ensure_ascii=False)
+    tipo = p.get("tipo", "academic")
     return (
         f"{sp}{{\n"
         f"{sp}  id:        {json.dumps(pid, ensure_ascii=False)},\n"
         f"{sp}  titulo:    {json.dumps(p['nome'], ensure_ascii=False)},\n"
         f"{sp}  status:    {json.dumps(p['status'], ensure_ascii=False)},\n"
-        f"{sp}  tipo:      \"academic\",\n"
+        f"{sp}  tipo:      {json.dumps(tipo, ensure_ascii=False)},\n"
         f"{sp}  periodo:   {json.dumps(p['periodo'], ensure_ascii=False)},\n"
         f"{sp}  resumo:    {json.dumps(p['descricao'][:200] if p['descricao'] else 'Descrição não disponível.', ensure_ascii=False)},\n"
         f"{sp}  descricao: {json.dumps(p['descricao'] or 'Descrição não disponível.', ensure_ascii=False)},\n"
@@ -304,16 +359,48 @@ def pat_to_js(p, indent=2):
 # ── Atualização do data.js ─────────────────────────────────────────
 
 def atualizar_bloco(conteudo_js, nome_const, novo_conteudo):
-    """Substitui o array de uma constante no data.js."""
-    pattern = rf'(const\s+{nome_const}\s*=\s*\[)(.*?)(\];)'
-    flags = re.DOTALL
-
-    def substituir(m):
-        return m.group(1) + "\n" + novo_conteudo + "\n" + m.group(3)
-
-    novo, n = re.subn(pattern, substituir, conteudo_js, flags=flags)
-    if n == 0:
+    """
+    Substitui o array de uma constante no data.js.
+    Usa contagem de colchetes para lidar com arrays aninhados.
+    """
+    # Encontra onde começa a constante
+    inicio_re = re.compile(rf'const\s+{nome_const}\s*=\s*\[', re.MULTILINE)
+    m = inicio_re.search(conteudo_js)
+    if not m:
         print(f"  ⚠️  Não encontrei 'const {nome_const}' no data.js — bloco não atualizado.")
+        return conteudo_js
+
+    pos_abre = m.end() - 1   # posição do '[' de abertura
+    profundidade = 0
+    pos_fecha = -1
+
+    # Percorre o texto contando colchetes para achar o ']' correspondente
+    for i in range(pos_abre, len(conteudo_js)):
+        c = conteudo_js[i]
+        if c == '[':
+            profundidade += 1
+        elif c == ']':
+            profundidade -= 1
+            if profundidade == 0:
+                # Verifica se é seguido de ';' (pode ter espaço/newline entre)
+                resto = conteudo_js[i+1:i+5].lstrip()
+                if resto.startswith(';'):
+                    pos_fecha = i
+                    break
+
+    if pos_fecha == -1:
+        print(f"  ⚠️  Não encontrei o fechamento do array '{nome_const}' — bloco não atualizado.")
+        return conteudo_js
+
+    # Acha o ';' após o ']'
+    pos_semi = conteudo_js.index(';', pos_fecha)
+
+    novo = (
+        conteudo_js[:pos_abre + 1] +
+        "\n" + novo_conteudo + "\n" +
+        conteudo_js[pos_fecha:pos_semi + 1]
+    )
+    print(f"  ✅ Bloco '{nome_const}' atualizado com sucesso.")
     return novo
 
 # ── Main ───────────────────────────────────────────────────────────
