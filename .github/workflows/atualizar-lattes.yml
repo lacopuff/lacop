@@ -9,6 +9,9 @@ on:
   schedule:
     - cron: '0 11 * * 1'   # 11h UTC = 8h BRT (horário de Brasília)
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   atualizar:
     runs-on: ubuntu-latest
