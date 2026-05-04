@@ -19,10 +19,9 @@ const LAB = {
   sigla:         "LACOP",
   nomeCompleto:  "Laboratório de Comunicações Ópticas",
   universidade:  "Universidade Federal Fluminense — Departamento de Engenharia de Telecomunicações",
-  descricao:     "Pesquisa fundamental e desenvolvimento aplicado em comunicações por fibra óptica, instrumentação fotônica e sistemas de sensoriamento distribuído — da bancada ao campo.",
-  email:         "laboratorio@universidade.br",
-  endereco:      "Prédio de Engenharia, Sala 00 — Campus Central, Cidade – Estado",
-  telefone:      "(xx) xxxx-xxxx",
+  descricao:     "Laboratório de pesquisa e desenvolvimento em comunicações ópticas, instrumentação e sensores",
+  email:         "viniciusnhs@id.uff.br",
+  endereco:      "Rua Passo da Pátria, 156, Bloco E, Sala 413/307, São Domingos, Niterói – Rio de Janeiro",
   lattes:        "Link para perfis institucionais dos pesquisadores",
   // Métricas do hero (atualize manualmente)
   stats: {
