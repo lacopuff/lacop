@@ -16,9 +16,9 @@
 
 // ── INFORMAÇÕES GERAIS DO LABORATÓRIO ─────────────────────
 const LAB = {
-  sigla:         "LabÓptica",
-  nomeCompleto:  "Laboratório de Fotônica e Sistemas Ópticos",
-  universidade:  "Universidade — Departamento de Engenharia",
+  sigla:         "LACOP",
+  nomeCompleto:  "Laboratório de Comunicações Ópticas",
+  universidade:  "Universidade Federal Fluminense — Departamento de Engenharia de Telecomunicações",
   descricao:     "Pesquisa fundamental e desenvolvimento aplicado em comunicações por fibra óptica, instrumentação fotônica e sistemas de sensoriamento distribuído — da bancada ao campo.",
   email:         "laboratorio@universidade.br",
   endereco:      "Prédio de Engenharia, Sala 00 — Campus Central, Cidade – Estado",
