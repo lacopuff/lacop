@@ -235,6 +235,24 @@
     .progress-bar   { height:3px; background:var(--faint); border-radius:2px; overflow:hidden; }
     .progress-fill  { height:100%; background:var(--cyan); border-radius:2px; }
 
+    /* SHOW MORE */
+    .proj-card.collapsed { display:none; }
+    .pub-item.collapsed  { display:none; }
+    .show-more-wrap { text-align:center; margin-top:2rem; }
+    .show-more-btn {
+      font-family:'IBM Plex Mono',monospace; font-size:.75rem; letter-spacing:.1em;
+      text-transform:uppercase; padding:.6rem 2rem; border-radius:2px; cursor:pointer;
+      border:1px solid var(--cyan-dim); background:transparent; color:var(--cyan);
+      transition:all .2s; display:inline-flex; align-items:center; gap:.6rem;
+    }
+    .show-more-btn:hover { background:var(--cyan); color:var(--bg); border-color:var(--cyan); }
+    .show-more-btn .count {
+      background:rgba(0,200,232,.15); border:1px solid rgba(0,200,232,.3);
+      padding:.1rem .5rem; border-radius:2px; font-size:.65rem;
+    }
+    .show-more-btn.expanded .arrow { display:inline-block; transform:rotate(180deg); }
+    .show-more-btn .arrow { display:inline-block; transition:transform .3s; }
+
     @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
     .detail-enter { animation:fadeIn .3s ease; }
@@ -341,6 +359,7 @@
         <button class="f-btn" onclick="fp('rd',this)">P&amp;D</button>
       </div>
       <div class="projects-grid" id="projects-grid"></div>
+      <div class="show-more-wrap" id="proj-more-wrap"></div>
     </div>
   </section>
 
@@ -355,6 +374,7 @@
     <div class="section-inner">
       <div class="sec-header"><p class="sec-label">Produção Científica</p><h2 class="sec-title">Publicações <em>Recentes</em></h2></div>
       <div class="pub-list" id="pub-list"></div>
+      <div class="show-more-wrap" id="pub-more-wrap"></div>
     </div>
   </section>
 
@@ -446,9 +466,12 @@ function renderMain() {
 function stripeClass(tipo, status) {
   return `stripe-${tipo}-${status}`;
 }
+const PROJ_INICIAL = 6;   // quantos projetos mostrar inicialmente
+const PUB_INICIAL  = 5;   // quantas publicações mostrar inicialmente
+
 function renderProjects() {
   const grid = document.getElementById('projects-grid');
-  grid.innerHTML = PROJETOS.map(p => {
+  grid.innerHTML = PROJETOS.map((p, i) => {
     const chips = [
       p.status === 'ongoing'
         ? '<span class="chip chip-on">Em andamento</span>'
@@ -456,8 +479,9 @@ function renderProjects() {
       (p.tipo === 'rd' || p.tipo === 'both') ? '<span class="chip chip-rd">P&amp;D</span>' : '',
       `<span class="chip-year">${p.periodo}</span>`,
     ].join('');
+    const extra = i >= PROJ_INICIAL ? ' collapsed' : '';
     return `
-      <div class="proj-card" data-type="${p.tipo}" data-status="${p.status}">
+      <div class="proj-card${extra}" data-type="${p.tipo}" data-status="${p.status}" data-index="${i}">
         <div class="proj-stripe ${stripeClass(p.tipo, p.status)}"></div>
         <div class="proj-body">
           <div class="proj-meta">${chips}</div>
@@ -471,6 +495,30 @@ function renderProjects() {
         </div>
       </div>`;
   }).join('');
+  renderProjMoreBtn(false);
+}
+
+function renderProjMoreBtn(expanded) {
+  const total   = PROJETOS.length;
+  const ocultos = total - PROJ_INICIAL;
+  const wrap    = document.getElementById('proj-more-wrap');
+  if (ocultos <= 0) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <button class="show-more-btn ${expanded ? 'expanded' : ''}" onclick="toggleProjetos(this)">
+      ${expanded ? 'Ver menos' : 'Ver todos os projetos'}
+      <span class="count">${expanded ? '' : '+' + ocultos}</span>
+      <span class="arrow">↓</span>
+    </button>`;
+}
+
+function toggleProjetos(btn) {
+  const expanded = btn.classList.toggle('expanded');
+  document.querySelectorAll('.proj-card[data-index]').forEach(card => {
+    const i = parseInt(card.dataset.index);
+    if (i >= PROJ_INICIAL) card.classList.toggle('collapsed', !expanded);
+  });
+  renderProjMoreBtn(expanded);
+  if (!expanded) document.getElementById('projetos').scrollIntoView({ behavior:'smooth' });
 }
 
 /* ── TEAM ─────────────────────────────────────────── */
@@ -491,15 +539,42 @@ function renderTeam() {
 
 /* ── PUBLICATIONS ─────────────────────────────────── */
 function renderPublications() {
-  document.getElementById('pub-list').innerHTML = PUBLICACOES.map(p => `
-    <div class="pub-item">
+  document.getElementById('pub-list').innerHTML = PUBLICACOES.map((p, i) => {
+    const extra = i >= PUB_INICIAL ? ' collapsed' : '';
+    return `
+    <div class="pub-item${extra}" data-pub-index="${i}">
       <div>
         <p class="pub-title">${p.titulo}</p>
         <p class="pub-authors">${p.autores}</p>
         <p class="pub-venue">${p.veiculo}</p>
       </div>
       <span class="pub-year">${p.ano}</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  renderPubMoreBtn(false);
+}
+
+function renderPubMoreBtn(expanded) {
+  const total   = PUBLICACOES.length;
+  const ocultos = total - PUB_INICIAL;
+  const wrap    = document.getElementById('pub-more-wrap');
+  if (ocultos <= 0) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <button class="show-more-btn ${expanded ? 'expanded' : ''}" onclick="togglePubs(this)">
+      ${expanded ? 'Ver menos' : 'Ver todas as publicações'}
+      <span class="count">${expanded ? '' : '+' + ocultos}</span>
+      <span class="arrow">↓</span>
+    </button>`;
+}
+
+function togglePubs(btn) {
+  const expanded = btn.classList.toggle('expanded');
+  document.querySelectorAll('.pub-item[data-pub-index]').forEach(el => {
+    const i = parseInt(el.dataset.pubIndex);
+    if (i >= PUB_INICIAL) el.classList.toggle('collapsed', !expanded);
+  });
+  renderPubMoreBtn(expanded);
+  if (!expanded) document.getElementById('publicacoes').scrollIntoView({ behavior:'smooth' });
 }
 
 /* ── PATENTS ──────────────────────────────────────── */
@@ -541,15 +616,23 @@ function renderContact() {
 function fp(filter, btn) {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  // Ao filtrar, expande tudo para mostrar resultados completos
   document.querySelectorAll('.proj-card').forEach(card => {
-    const show =
+    const type   = card.dataset.type;
+    const status = card.dataset.status;
+    const match  =
       filter === 'all'       ? true :
-      filter === 'ongoing'   ? card.dataset.status === 'ongoing' :
-      filter === 'completed' ? card.dataset.status === 'completed' :
-      filter === 'academic'  ? (card.dataset.type === 'academic' || card.dataset.type === 'both') :
-      filter === 'rd'        ? (card.dataset.type === 'rd' || card.dataset.type === 'both') : true;
-    card.classList.toggle('hidden', !show);
+      filter === 'ongoing'   ? status === 'ongoing' :
+      filter === 'completed' ? status === 'completed' :
+      filter === 'academic'  ? (type === 'academic' || type === 'both') :
+      filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
+    card.classList.toggle('hidden',    !match);
+    card.classList.toggle('collapsed', false); // remove collapsed ao filtrar
   });
+  // Esconde o botão "ver mais" quando filtro ativo
+  const wrap = document.getElementById('proj-more-wrap');
+  if (filter === 'all') renderProjMoreBtn(true);
+  else wrap.innerHTML = '';
 }
 
 /* ── ROUTER ───────────────────────────────────────── */
