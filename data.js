@@ -16,7 +16,7 @@
 
 // ── INFORMAÇÕES GERAIS DO LABORATÓRIO ─────────────────────
 const LAB = {
-  sigla:         "LabÓptica",
+  sigla:         "LACOP",
   nomeCompleto:  "Laboratório de Fotônica e Sistemas Ópticos",
   universidade:  "Universidade — Departamento de Engenharia",
   descricao:     "Pesquisa fundamental e desenvolvimento aplicado em comunicações por fibra óptica, instrumentação fotônica e sistemas de sensoriamento distribuído — da bancada ao campo.",
@@ -57,8 +57,8 @@ const LAB = {
 const EQUIPE = [
   {
     iniciais: "AS",
-    foto:  "fotos/ana-silva.jpg",
-    nome:  "Prof. Ana Silva",
+    foto:  "fotos/vnhs.jpeg",
+    nome:  "Prof. DSc. Vinicius N. Henrique Silva",
     cargo: "Coordenadora",
     area:  "Comunicações ópticas coerentes e processamento de sinais.",
   },
