@@ -499,30 +499,31 @@ function renderProjects() {
         </div>
       </div>`;
   }).join('');
-  renderProjMoreBtn(false);
+  renderProjMoreBtn(PROJ_INICIAL); projVisiveis = PROJ_INICIAL;
 }
 
-function renderProjMoreBtn(expanded) {
+function renderProjMoreBtn(visiveis) {
   const total   = PROJETOS.length;
-  const ocultos = total - PROJ_INICIAL;
+  const ocultos = total - visiveis;
   const wrap    = document.getElementById('proj-more-wrap');
   if (ocultos <= 0) { wrap.innerHTML = ''; return; }
   wrap.innerHTML = `
-    <button class="show-more-btn ${expanded ? 'expanded' : ''}" onclick="toggleProjetos(this)">
-      ${expanded ? 'Ver menos' : 'Ver todos os projetos'}
-      <span class="count">${expanded ? '' : '+' + ocultos}</span>
+    <button class="show-more-btn" onclick="mostrarMaisProjetos()">
+      Ver mais projetos
+      <span class="count">+${Math.min(ocultos, 5)}</span>
       <span class="arrow">↓</span>
     </button>`;
 }
 
-function toggleProjetos(btn) {
-  const expanded = btn.classList.toggle('expanded');
+let projVisiveis = PROJ_INICIAL;
+
+function mostrarMaisProjetos() {
+  projVisiveis = Math.min(projVisiveis + 5, PROJETOS.length);
   document.querySelectorAll('.proj-card[data-index]').forEach(card => {
     const i = parseInt(card.dataset.index);
-    if (i >= PROJ_INICIAL) card.classList.toggle('collapsed', !expanded);
+    if (i < projVisiveis) card.classList.remove('collapsed');
   });
-  renderProjMoreBtn(expanded);
-  if (!expanded) document.getElementById('projetos').scrollIntoView({ behavior:'smooth' });
+  renderProjMoreBtn(projVisiveis);
 }
 
 /* ── TEAM ─────────────────────────────────────────── */
@@ -571,30 +572,31 @@ function renderPublications() {
       <span class="pub-year">${p.ano}</span>
     </div>`;
   }).join('');
-  renderPubMoreBtn(false);
+  renderPubMoreBtn(PUB_INICIAL); pubVisiveis = PUB_INICIAL;
 }
 
-function renderPubMoreBtn(expanded) {
+function renderPubMoreBtn(visiveis) {
   const total   = PUBLICACOES.length;
-  const ocultos = total - PUB_INICIAL;
+  const ocultos = total - visiveis;
   const wrap    = document.getElementById('pub-more-wrap');
   if (ocultos <= 0) { wrap.innerHTML = ''; return; }
   wrap.innerHTML = `
-    <button class="show-more-btn ${expanded ? 'expanded' : ''}" onclick="togglePubs(this)">
-      ${expanded ? 'Ver menos' : 'Ver todas as publicações'}
-      <span class="count">${expanded ? '' : '+' + ocultos}</span>
+    <button class="show-more-btn" onclick="mostrarMaisPubs()">
+      Ver mais publicações
+      <span class="count">+${Math.min(ocultos, 5)}</span>
       <span class="arrow">↓</span>
     </button>`;
 }
 
-function togglePubs(btn) {
-  const expanded = btn.classList.toggle('expanded');
+let pubVisiveis = PUB_INICIAL;
+
+function mostrarMaisPubs() {
+  pubVisiveis = Math.min(pubVisiveis + 5, PUBLICACOES.length);
   document.querySelectorAll('.pub-item[data-pub-index]').forEach(el => {
     const i = parseInt(el.dataset.pubIndex);
-    if (i >= PUB_INICIAL) el.classList.toggle('collapsed', !expanded);
+    if (i < pubVisiveis) el.classList.remove('collapsed');
   });
-  renderPubMoreBtn(expanded);
-  if (!expanded) document.getElementById('publicacoes').scrollIntoView({ behavior:'smooth' });
+  renderPubMoreBtn(pubVisiveis);
 }
 
 /* ── PATENTS ──────────────────────────────────────── */
@@ -651,7 +653,7 @@ function fp(filter, btn) {
   });
   // Esconde o botão "ver mais" quando filtro ativo
   const wrap = document.getElementById('proj-more-wrap');
-  if (filter === 'all') renderProjMoreBtn(true);
+  if (filter === 'all') renderProjMoreBtn(PROJETOS.length);
   else wrap.innerHTML = '';
 }
 
