@@ -174,7 +174,7 @@ def substituir_bloco(conteudo, nome_const, novo):
     if pos_fecha == -1: return conteudo
     pos_semi = conteudo.index(';', pos_fecha)
     print(f"  OK '{nome_const}' atualizado.")
-    return conteudo[:pos_abre+1] + "\n" + novo + "\n" + conteudo[pos_fecha:pos_semi+1]
+    return conteudo[:pos_abre+1] + "\n" + novo + "\n" + conteudo[pos_fecha:]
 
 def adicionar_const(conteudo, nome_const, bloco):
     conteudo = conteudo.rstrip()
