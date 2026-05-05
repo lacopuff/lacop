@@ -128,7 +128,7 @@ const EQUIPE = [
   },
     {
     iniciais:  "MSS",
-    foto:      "fotos/alexandre.jpg",
+    foto:      "fotos/alexandre.jpeg",
     nome:      "MSc. Alexandre Castro de Toledo Santos",
     cargo:     "Doutorando",
     area:      "Instrumentação Eletrônica, Controles e Automação",
