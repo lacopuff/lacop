@@ -143,8 +143,10 @@
       display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;
     }
     .team-category-label::after { content:''; flex:1; height:1px; background:var(--faint); }
-    .member { background:var(--panel); padding:1.75rem 1.25rem; text-align:center; border:1px solid var(--border2); transition:background .2s; }
-    .member:hover { background:var(--panel2); }
+    .member { background:var(--panel); padding:1.75rem 1.25rem; text-align:center; border:1px solid var(--border2); transition:background .2s, border-color .2s; cursor:pointer; }
+    .member:hover { background:var(--panel2); border-color:var(--cyan-dim); }
+    .member:hover .m-name { color:var(--cyan); }
+    .member-link { display:block; text-decoration:none; color:inherit; }
     .m-avatar { width:72px; height:72px; border-radius:50%; background:var(--bg3); border:1.5px solid var(--cyan); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-family:'Fraunces',serif; font-size:1.2rem; font-weight:500; color:var(--cyan); box-shadow:0 0 16px rgba(0,200,232,.2); overflow:hidden; flex-shrink:0; }
     .m-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
     .m-name { font-family:'Fraunces',serif; font-size:1rem; font-weight:500; color:var(--white); margin-bottom:.25rem; }
@@ -561,13 +563,15 @@ function renderTeam() {
     const avatar = m.foto
       ? `<img src="${m.foto}" alt="${m.nome}" onerror="this.parentElement.innerHTML='${m.iniciais}'">`
       : m.iniciais;
-    return `
-      <div class="member">
+    const inner = `
         <div class="m-avatar">${avatar}</div>
         <p class="m-name">${m.nome}</p>
         <p class="m-role">${m.cargo}</p>
-        <p class="m-area">${m.area}</p>
-      </div>`;
+        <p class="m-area">${m.area}</p>`;
+    const content = m.lattes
+      ? `<a class="member-link" href="${m.lattes}" target="_blank" rel="noopener" title="Ver Currículo Lattes">${inner}</a>`
+      : inner;
+    return `<div class="member">${content}</div>`;
   }
 
   let html = '';
