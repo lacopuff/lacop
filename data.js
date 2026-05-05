@@ -21,7 +21,7 @@ const LAB = {
   universidade:  "Universidade Federal Fluminense — Departamento de Engenharia de Telecomunicações",
   descricao:     "Laboratório de pesquisa aplicada em comunicações óticas, instrumentação e sensores para aplicações diversas.",
   email:         "viniciusnhs@id.uff.br",
-  endereco:      "Rua Passo da Pátria, 156, Bloco E, Salas 413 e 307, São Doming, Niterói - RJ",
+  endereco:      "Rua Passo da Pátria, 156, Bloco E, Salas 413 e 307, São Domingos, Niterói - RJ",
   // Métricas do hero (atualize manualmente)
   stats: {
     projetos:      14,
