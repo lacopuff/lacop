@@ -119,7 +119,7 @@ const EQUIPE = [
   },
     {
     iniciais:  "MSS",
-    foto:      "fotos/tda.jpg",
+    foto:      "fotos/mss.jpg",
     nome:      "MSc. Matheus de Souza Santos",
     cargo:     "Doutorando",
     area:      "Sistemas de comunicações ópticas sem fio no espaço livre",
