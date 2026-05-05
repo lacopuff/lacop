@@ -157,6 +157,13 @@
 
     /* PUBLICATIONS */
     .pub-list { display:flex; flex-direction:column; gap:1.5px; }
+    .pub-category { margin-bottom:3rem; }
+    .pub-category-label {
+      font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--cyan);
+      display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;
+    }
+    .pub-category-label::after { content:''; flex:1; height:1px; background:var(--faint); }
     .pub-item { background:var(--panel); padding:1.4rem 1.75rem; border:1px solid var(--border2); display:grid; grid-template-columns:1fr auto; gap:1.5rem; align-items:start; transition:background .2s; position:relative; }
     .pub-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--faint); transition:background .2s; }
     .pub-item:hover { background:var(--panel2); }
@@ -389,8 +396,19 @@
   <section id="publicacoes" class="std">
     <div class="section-inner">
       <div class="sec-header"><p class="sec-label">Produção Científica</p><h2 class="sec-title">Publicações <em>Recentes</em></h2></div>
-      <div class="pub-list" id="pub-list"></div>
-      <div class="show-more-wrap" id="pub-more-wrap"></div>
+
+      <div class="pub-category">
+        <div class="pub-category-label">Artigos em Periódicos</div>
+        <div class="pub-list" id="pub-list-journal"></div>
+        <div class="show-more-wrap" id="pub-more-journal"></div>
+      </div>
+
+      <div class="pub-category">
+        <div class="pub-category-label">Trabalhos em Congressos</div>
+        <div class="pub-list" id="pub-list-conf"></div>
+        <div class="show-more-wrap" id="pub-more-conf"></div>
+      </div>
+
     </div>
   </section>
 
@@ -600,18 +618,16 @@ function parsePubVenue(veiculo) {
   return { venue: journal, doi };
 }
 
-function renderPublications() {
-  document.getElementById('pub-list').innerHTML = PUBLICACOES.map((p, i) => {
-    const { venue, doi } = parsePubVenue(p.veiculo);
-    const doiUrl    = doi ? `https://doi.org/${doi}` : null;
-    const titleHtml = doiUrl
-      ? `<a href="${doiUrl}" target="_blank" rel="noopener">${p.titulo} ↗</a>`
-      : p.titulo;
-    const venueHtml = venue
-      + (doi ? ` · <a class="pub-doi" href="${doiUrl}" target="_blank" rel="noopener">DOI: ${doi}</a>` : '');
-    const extra = i >= PUB_INICIAL ? ' collapsed' : '';
-    return `
-    <div class="pub-item${extra}" data-pub-index="${i}">
+function pubItemHtml(p, i, idPrefix) {
+  const { venue, doi } = parsePubVenue(p.veiculo);
+  const doiUrl    = doi ? `https://doi.org/${doi}` : null;
+  const titleHtml = doiUrl
+    ? `<a href="${doiUrl}" target="_blank" rel="noopener">${p.titulo} ↗</a>`
+    : p.titulo;
+  const venueHtml = venue + (doi ? ` · <a class="pub-doi" href="${doiUrl}" target="_blank" rel="noopener">DOI: ${doi}</a>` : '');
+  const extra = i >= PUB_INICIAL ? ' collapsed' : '';
+  return `
+    <div class="pub-item${extra}" data-pub-index="${i}" data-pub-list="${idPrefix}">
       <div>
         <p class="pub-title">${titleHtml}</p>
         <p class="pub-authors">${p.autores}</p>
@@ -619,32 +635,56 @@ function renderPublications() {
       </div>
       <span class="pub-year">${p.ano}</span>
     </div>`;
-  }).join('');
-  renderPubMoreBtn(PUB_INICIAL); pubVisiveis = PUB_INICIAL;
 }
 
-function renderPubMoreBtn(visiveis) {
-  const total   = PUBLICACOES.length;
+function isJournal(p) {
+  // Tem DOI com padrão de periódico OU o veículo não parece evento/congresso
+  const v = (p.veiculo || '').toLowerCase();
+  const doi = (p.veiculo || '').match(/DOI:\s*(10\.\S+)/i)?.[1] || '';
+  const isConf = /congress|symposium|simp[oó]sio|confer[eê]ncia|conferenc|workshop|event|cbmag|momag|sbmo|sbrt|ieee.*conf|anais|procee/i.test(v);
+  const hasDoi = doi.length > 0;
+  // Se tem DOI e não parece congresso → periódico
+  if (hasDoi && !isConf) return true;
+  // Sem DOI mas parece periódico (journal, letters, transactions, review)
+  if (/journal|letters|transactions|review|magazine|sensor|optic|photonic|lightwave|express|technolog/i.test(v)) return true;
+  return false;
+}
+
+function renderPublications() {
+  const journals = PUBLICACOES.filter(p => isJournal(p));
+  const conf     = PUBLICACOES.filter(p => !isJournal(p));
+
+  document.getElementById('pub-list-journal').innerHTML = journals.map((p, i) => pubItemHtml(p, i, 'journal')).join('');
+  document.getElementById('pub-list-conf').innerHTML    = conf.map((p, i) => pubItemHtml(p, i, 'conf')).join('');
+
+  renderPubMoreBtn('journal', journals.length, PUB_INICIAL);
+  renderPubMoreBtn('conf',    conf.length,     PUB_INICIAL);
+  pubVisiveis = { journal: PUB_INICIAL, conf: PUB_INICIAL };
+}
+
+function renderPubMoreBtn(tipo, total, visiveis) {
   const ocultos = total - visiveis;
-  const wrap    = document.getElementById('pub-more-wrap');
+  const wrap = document.getElementById(`pub-more-${tipo}`);
+  if (!wrap) return;
   if (ocultos <= 0) { wrap.innerHTML = ''; return; }
   wrap.innerHTML = `
-    <button class="show-more-btn" onclick="mostrarMaisPubs()">
-      Ver mais publicações
+    <button class="show-more-btn" onclick="mostrarMaisPubs('${tipo}')">
+      Ver mais
       <span class="count">+${Math.min(ocultos, 5)}</span>
       <span class="arrow">↓</span>
     </button>`;
 }
 
-let pubVisiveis = PUB_INICIAL;
+let pubVisiveis = { journal: PUB_INICIAL, conf: PUB_INICIAL };
 
-function mostrarMaisPubs() {
-  pubVisiveis = Math.min(pubVisiveis + 5, PUBLICACOES.length);
-  document.querySelectorAll('.pub-item[data-pub-index]').forEach(el => {
+function mostrarMaisPubs(tipo) {
+  const lista   = tipo === 'journal' ? PUBLICACOES.filter(p => isJournal(p)) : PUBLICACOES.filter(p => !isJournal(p));
+  pubVisiveis[tipo] = Math.min(pubVisiveis[tipo] + 5, lista.length);
+  document.querySelectorAll(`.pub-item[data-pub-list="${tipo}"]`).forEach(el => {
     const i = parseInt(el.dataset.pubIndex);
-    if (i < pubVisiveis) el.classList.remove('collapsed');
+    if (i < pubVisiveis[tipo]) el.classList.remove('collapsed');
   });
-  renderPubMoreBtn(pubVisiveis);
+  renderPubMoreBtn(tipo, lista.length, pubVisiveis[tipo]);
 }
 
 /* ── PATENTS ──────────────────────────────────────── */
