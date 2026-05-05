@@ -126,6 +126,15 @@ const EQUIPE = [
     categoria: "doutorando",
     lattes:    "https://lattes.cnpq.br/0000000000000007",
   },
+    {
+    iniciais:  "MSS",
+    foto:      "fotos/alexandre.jpg",
+    nome:      "MSc. Alexandre Castro de Toledo Santos",
+    cargo:     "Doutorando",
+    area:      "Instrumentação Eletrônica, Controles e Automação",
+    categoria: "doutorando",
+    lattes:    "http://lattes.cnpq.br/5028876051950974",
+  },
   {
     iniciais:  "JRF",
     foto:      "fotos/jrf.jpg",
