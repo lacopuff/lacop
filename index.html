@@ -123,7 +123,8 @@
     .chip-done { background:rgba(0,200,232,.1);  color:var(--cyan);  border:1px solid rgba(0,200,232,.2); }
     .chip-rd   { background:rgba(212,168,67,.1); color:var(--gold);  border:1px solid rgba(212,168,67,.2); }
     .chip-year { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); }
-    .proj-title { font-family:'Fraunces',serif; font-size:1.12rem; font-weight:500; color:var(--white); margin-bottom:.6rem; line-height:1.35; }
+    .proj-title { font-family:'Fraunces',serif; font-size:1.12rem; font-weight:500; color:var(--white); margin-bottom:.6rem; line-height:1.35; cursor:pointer; transition:color .2s; }
+    .proj-title:hover { color:var(--cyan); }
     .proj-desc  { font-size:.85rem; color:var(--muted); line-height:1.65; margin-bottom:1.2rem; }
     .proj-tags  { display:flex; flex-wrap:wrap; gap:.35rem; }
     .tag { font-family:'IBM Plex Mono',monospace; font-size:.62rem; padding:.15rem .5rem; border-radius:2px; background:rgba(255,255,255,.04); color:var(--muted); border:1px solid var(--border2); }
@@ -135,6 +136,13 @@
 
     /* TEAM */
     .team-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1.5px; }
+    .team-category { max-width:1100px; margin:0 auto 3rem; }
+    .team-category-label {
+      font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--cyan);
+      display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;
+    }
+    .team-category-label::after { content:''; flex:1; height:1px; background:var(--faint); }
     .member { background:var(--panel); padding:1.75rem 1.25rem; text-align:center; border:1px solid var(--border2); transition:background .2s; }
     .member:hover { background:var(--panel2); }
     .m-avatar { width:72px; height:72px; border-radius:50%; background:var(--bg3); border:1.5px solid var(--cyan); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-family:'Fraunces',serif; font-size:1.2rem; font-weight:500; color:var(--cyan); box-shadow:0 0 16px rgba(0,200,232,.2); overflow:hidden; flex-shrink:0; }
@@ -370,7 +378,7 @@
   <section id="equipe" class="std-alt">
     <div class="section-inner">
       <div class="sec-header"><p class="sec-label">Pesquisadores</p><h2 class="sec-title">Nossa <em>Equipe</em></h2></div>
-      <div class="team-grid" id="team-grid"></div>
+      <div id="team-container"></div>
     </div>
   </section>
 
@@ -502,7 +510,7 @@ function renderProjects() {
         <div class="proj-stripe ${stripeClass(p.tipo, p.status)}"></div>
         <div class="proj-body">
           <div class="proj-meta">${chips}</div>
-          <h3 class="proj-title">${p.titulo}</h3>
+          <h3 class="proj-title" onclick="openProject('${p.id}')">${p.titulo}</h3>
           <p class="proj-desc">${p.resumo}</p>
           <div class="proj-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
         </div>
@@ -542,18 +550,38 @@ function mostrarMaisProjetos() {
 
 /* ── TEAM ─────────────────────────────────────────── */
 function renderTeam() {
-  document.getElementById('team-grid').innerHTML = EQUIPE.map(m => {
+  const CATEGORIAS = [
+    { key: 'pesquisador', label: 'Pesquisadores' },
+    { key: 'doutorando',  label: 'Doutorandos'  },
+    { key: 'mestrando',   label: 'Mestrandos'   },
+    { key: 'ic',          label: 'Iniciação Científica' },
+  ];
+
+  function memberCard(m) {
     const avatar = m.foto
       ? `<img src="${m.foto}" alt="${m.nome}" onerror="this.parentElement.innerHTML='${m.iniciais}'">`
       : m.iniciais;
     return `
-    <div class="member">
-      <div class="m-avatar">${avatar}</div>
-      <p class="m-name">${m.nome}</p>
-      <p class="m-role">${m.cargo}</p>
-      <p class="m-area">${m.area}</p>
-    </div>`;
-  }).join('');
+      <div class="member">
+        <div class="m-avatar">${avatar}</div>
+        <p class="m-name">${m.nome}</p>
+        <p class="m-role">${m.cargo}</p>
+        <p class="m-area">${m.area}</p>
+      </div>`;
+  }
+
+  let html = '';
+  for (const cat of CATEGORIAS) {
+    const membros = EQUIPE.filter(m => (m.categoria || 'pesquisador') === cat.key);
+    if (!membros.length) continue;
+    html += `
+      <div class="team-category">
+        <div class="team-category-label">${cat.label}</div>
+        <div class="team-grid">${membros.map(memberCard).join('')}</div>
+      </div>`;
+  }
+  // Membros sem categoria definida vão para Pesquisadores
+  document.getElementById('team-container').innerHTML = html;
 }
 
 /* ── PUBLICATIONS ─────────────────────────────────── */

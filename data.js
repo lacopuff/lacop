@@ -41,75 +41,77 @@ const LAB = {
 //    nome       — nome completo com título
 //    cargo      — ex: "Coordenadora", "Doutorando", "Bolsista IC"
 //    area       — frase curta descrevendo a linha de pesquisa
-//    foto       — (OPCIONAL) caminho da foto. Duas opções:
-//
-//                 Opção A — foto no próprio repositório:
-//                   1. No GitHub, crie uma pasta chamada "fotos"
-//                   2. Faça upload da foto lá (ex: ana-silva.jpg)
-//                   3. Use o caminho: foto: "fotos/ana-silva.jpg"
-//
-//                 Opção B — URL externa (ex: foto do site da universidade):
-//                   foto: "https://universidade.br/foto-ana.jpg"
-//
-//                 Se o campo "foto" for omitido ou a imagem não carregar,
-//                 as iniciais aparecem automaticamente como fallback.
+//    categoria  — define em qual grupo aparece na página:
+//                   "pesquisador"  → Pesquisadores
+//                   "doutorando"   → Doutorandos
+//                   "mestrando"    → Mestrandos
+//                   "ic"           → Iniciação Científica
+//    foto       — (OPCIONAL) caminho da foto.
 //
 const EQUIPE = [
   {
-    iniciais: "AS",
-    foto:  "fotos/ana-silva.jpg",
-    nome:  "Prof. Ana Silva",
-    cargo: "Coordenadora",
-    area:  "Comunicações ópticas coerentes e processamento de sinais.",
+    iniciais:  "AS",
+    foto:      "fotos/ana-silva.jpg",
+    nome:      "Prof. Ana Silva",
+    cargo:     "Coordenadora",
+    area:      "Comunicações ópticas coerentes e processamento de sinais.",
+    categoria: "pesquisador",
   },
   {
-    iniciais: "CM",
-    foto:  "fotos/carlos-mendes.jpg",
-    nome:  "Dr. Carlos Mendes",
-    cargo: "Pesquisador Sênior",
-    area:  "Instrumentação fotônica e interrogação de sensores FBG.",
+    iniciais:  "CM",
+    foto:      "fotos/carlos-mendes.jpg",
+    nome:      "Dr. Carlos Mendes",
+    cargo:     "Pesquisador Sênior",
+    area:      "Instrumentação fotônica e interrogação de sensores FBG.",
+    categoria: "pesquisador",
   },
   {
-    iniciais: "LF",
-    foto:  "fotos/lucia-ferreira.jpg",
-    nome:  "Dra. Lúcia Ferreira",
-    cargo: "Pesquisadora",
-    area:  "Sensoriamento distribuído DTS/DAS e aplicações industriais.",
+    iniciais:  "LF",
+    foto:      "fotos/lucia-ferreira.jpg",
+    nome:      "Dra. Lúcia Ferreira",
+    cargo:     "Pesquisadora",
+    area:      "Sensoriamento distribuído DTS/DAS e aplicações industriais.",
+    categoria: "pesquisador",
   },
   {
-    iniciais: "RS",
-    foto:  "fotos/rafael-santos.jpg",
-    nome:  "Rafael Santos",
-    cargo: "Doutorando",
-    area:  "BOTDA de alta resolução para aplicações de SHM.",
+    iniciais:  "RS",
+    foto:      "fotos/rafael-santos.jpg",
+    nome:      "Rafael Santos",
+    cargo:     "Doutorando",
+    area:      "BOTDA de alta resolução para aplicações de SHM.",
+    categoria: "doutorando",
   },
   {
-    iniciais: "MC",
-    foto:  "fotos/marina-costa.jpg",
-    nome:  "Marina Costa",
-    cargo: "Mestranda",
-    area:  "Redes FBG multiplexadas para monitoramento estrutural.",
+    iniciais:  "BT",
+    foto:      "fotos/beatriz-torres.jpg",
+    nome:      "Beatriz Torres",
+    cargo:     "Doutoranda",
+    area:      "Não-linearidades em sistemas WDM e compensação digital.",
+    categoria: "doutorando",
   },
   {
-    iniciais: "JP",
-    foto:  "fotos/joao-pedro.jpg",
-    nome:  "João Pedro Lima",
-    cargo: "Bolsista IC",
-    area:  "Caracterização de componentes ópticos passivos.",
+    iniciais:  "MC",
+    foto:      "fotos/marina-costa.jpg",
+    nome:      "Marina Costa",
+    cargo:     "Mestranda",
+    area:      "Redes FBG multiplexadas para monitoramento estrutural.",
+    categoria: "mestrando",
   },
   {
-    iniciais: "BT",
-    foto:  "fotos/beatriz-torres.jpg",
-    nome:  "Beatriz Torres",
-    cargo: "Doutoranda",
-    area:  "Não-linearidades em sistemas WDM e compensação digital.",
+    iniciais:  "FO",
+    foto:      "fotos/felipe-oliveira.jpg",
+    nome:      "Felipe Oliveira",
+    cargo:     "Mestrando",
+    area:      "Sensores de corrente baseados em efeito Faraday.",
+    categoria: "mestrando",
   },
   {
-    iniciais: "FO",
-    foto:  "fotos/felipe-oliveira.jpg",
-    nome:  "Felipe Oliveira",
-    cargo: "Mestrando",
-    area:  "Sensores de corrente baseados em efeito Faraday.",
+    iniciais:  "JP",
+    foto:      "fotos/joao-pedro.jpg",
+    nome:      "João Pedro Lima",
+    cargo:     "Bolsista IC",
+    area:      "Caracterização de componentes ópticos passivos.",
+    categoria: "ic",
   },
 ];
 
