@@ -82,7 +82,7 @@ def extrair_publicacoes(root):
         journal = limpar(d.get("NOME-DO-PERIODICO","")) if d is not None else ""
         autores = abreviar_autores(list(artigo.iter("AUTORES")))
         venue   = journal + (f" · DOI: {doi}" if doi else "")
-        pubs.append({"titulo":titulo,"autores":autores,"veiculo":venue,"ano":ano})
+        pubs.append({"titulo":titulo,"autores":autores,"veiculo":venue,"ano":ano,"tipo":"journal"})
 
     for trab in root.iter("TRABALHO-EM-EVENTOS"):
         b = trab.find("DADOS-BASICOS-DO-TRABALHO")
@@ -94,7 +94,7 @@ def extrair_publicacoes(root):
         titulo  = limpar(b.get("TITULO-DO-TRABALHO",""))
         evento  = limpar(d.get("NOME-DO-EVENTO","")) if d is not None else ""
         autores = abreviar_autores(list(trab.iter("AUTORES")))
-        pubs.append({"titulo":titulo,"autores":autores,"veiculo":evento,"ano":ano})
+        pubs.append({"titulo":titulo,"autores":autores,"veiculo":evento,"ano":ano,"tipo":"conference"})
     return pubs
 
 def extrair_projetos(root, nome_pi=""):
@@ -188,6 +188,7 @@ def pub_to_js(p):
             f"    autores: {json.dumps(p['autores'], ensure_ascii=False)},\n"
             f"    veiculo: {json.dumps(p['veiculo'], ensure_ascii=False)},\n"
             f"    ano:     {p['ano']},\n"
+            f"    tipo:    \"{p.get('tipo','journal')}\",\n"
             f"  }}")
 
 def proj_to_js(p, pid):
