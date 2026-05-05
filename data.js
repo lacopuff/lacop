@@ -41,12 +41,10 @@ const LAB = {
 //    nome       — nome completo com título
 //    cargo      — ex: "Coordenadora", "Doutorando", "Bolsista IC"
 //    area       — frase curta descrevendo a linha de pesquisa
-//    categoria  — define em qual grupo aparece na página:
-//                   "pesquisador"  → Pesquisadores
-//                   "doutorando"   → Doutorandos
-//                   "mestrando"    → Mestrandos
-//                   "ic"           → Iniciação Científica
-//    foto       — (OPCIONAL) caminho da foto.
+//    categoria  — "pesquisador" | "doutorando" | "mestrando" | "ic"
+//    foto       — (OPCIONAL) caminho da foto ou URL externa
+//    lattes     — (OPCIONAL) URL do currículo Lattes
+//                 Ex: "https://lattes.cnpq.br/1234567890123456"
 //
 const EQUIPE = [
   {
@@ -56,6 +54,7 @@ const EQUIPE = [
     cargo:     "Coordenadora",
     area:      "Comunicações ópticas coerentes e processamento de sinais.",
     categoria: "pesquisador",
+    lattes:    "https://lattes.cnpq.br/0000000000000001",
   },
   {
     iniciais:  "CM",
@@ -64,6 +63,7 @@ const EQUIPE = [
     cargo:     "Pesquisador Sênior",
     area:      "Instrumentação fotônica e interrogação de sensores FBG.",
     categoria: "pesquisador",
+    lattes:    "https://lattes.cnpq.br/0000000000000002",
   },
   {
     iniciais:  "LF",
@@ -72,6 +72,7 @@ const EQUIPE = [
     cargo:     "Pesquisadora",
     area:      "Sensoriamento distribuído DTS/DAS e aplicações industriais.",
     categoria: "pesquisador",
+    lattes:    "https://lattes.cnpq.br/0000000000000003",
   },
   {
     iniciais:  "RS",
@@ -80,6 +81,7 @@ const EQUIPE = [
     cargo:     "Doutorando",
     area:      "BOTDA de alta resolução para aplicações de SHM.",
     categoria: "doutorando",
+    lattes:    "https://lattes.cnpq.br/0000000000000004",
   },
   {
     iniciais:  "BT",
@@ -88,6 +90,7 @@ const EQUIPE = [
     cargo:     "Doutoranda",
     area:      "Não-linearidades em sistemas WDM e compensação digital.",
     categoria: "doutorando",
+    lattes:    "https://lattes.cnpq.br/0000000000000005",
   },
   {
     iniciais:  "MC",
@@ -96,6 +99,7 @@ const EQUIPE = [
     cargo:     "Mestranda",
     area:      "Redes FBG multiplexadas para monitoramento estrutural.",
     categoria: "mestrando",
+    lattes:    "https://lattes.cnpq.br/0000000000000006",
   },
   {
     iniciais:  "FO",
@@ -104,6 +108,7 @@ const EQUIPE = [
     cargo:     "Mestrando",
     area:      "Sensores de corrente baseados em efeito Faraday.",
     categoria: "mestrando",
+    lattes:    "https://lattes.cnpq.br/0000000000000007",
   },
   {
     iniciais:  "JP",
@@ -112,6 +117,7 @@ const EQUIPE = [
     cargo:     "Bolsista IC",
     area:      "Caracterização de componentes ópticos passivos.",
     categoria: "ic",
+    lattes:    "https://lattes.cnpq.br/0000000000000008",
   },
 ];
 
