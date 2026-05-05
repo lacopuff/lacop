@@ -687,28 +687,87 @@ function fp(filter, btn) {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
-  // Filtra mantendo a ordem já renderizada (em andamento primeiro, depois por ano)
-  let visivelCount = 0;
-  document.querySelectorAll('.proj-card').forEach(card => {
+  // Separa os cards que pertencem a este filtro
+  const cards = Array.from(document.querySelectorAll('.proj-card'));
+  const match = cards.filter(card => {
     const type   = card.dataset.type;
     const status = card.dataset.status;
-    const match  =
-      filter === 'all'       ? true :
-      filter === 'ongoing'   ? status === 'ongoing' :
-      filter === 'completed' ? status === 'completed' :
-      filter === 'academic'  ? (type === 'academic' || type === 'both') :
-      filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
+    return filter === 'all'       ? true :
+           filter === 'ongoing'   ? status === 'ongoing' :
+           filter === 'completed' ? status === 'completed' :
+           filter === 'academic'  ? (type === 'academic' || type === 'both') :
+           filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
+  });
+  const noMatch = cards.filter(c => !match.includes(c));
 
-    card.classList.toggle('hidden', !match);
-    if (match) {
-      card.classList.remove('collapsed');
-      visivelCount++;
+  // Esconde os que não pertencem ao filtro
+  noMatch.forEach(c => { c.classList.add('hidden'); c.classList.remove('collapsed'); });
+
+  if (filter === 'all') {
+    // Volta ao estado inicial: mostra só os primeiros PROJ_INICIAL
+    match.forEach((c, i) => {
+      c.classList.remove('hidden');
+      if (i < PROJ_INICIAL) c.classList.remove('collapsed');
+      else                  c.classList.add('collapsed');
+    });
+    projVisiveis = PROJ_INICIAL;
+    renderProjMoreBtn(projVisiveis);
+  } else {
+    // Filtro ativo: aplica "ver mais" dentro do subconjunto filtrado
+    const LIMITE = PROJ_INICIAL;
+    match.forEach((c, i) => {
+      c.classList.remove('hidden');
+      if (i < LIMITE) c.classList.remove('collapsed');
+      else            c.classList.add('collapsed');
+    });
+
+    const wrap = document.getElementById('proj-more-wrap');
+    const ocultos = match.length - LIMITE;
+    if (ocultos <= 0) {
+      wrap.innerHTML = '';
+    } else {
+      // Guarda referência do filtro atual para o botão usar
+      wrap.dataset.filter = filter;
+      wrap.dataset.visiveis = LIMITE;
+      wrap.innerHTML = `
+        <button class="show-more-btn" onclick="mostrarMaisFiltro()">
+          Ver mais projetos
+          <span class="count">+${Math.min(ocultos, 5)}</span>
+          <span class="arrow">↓</span>
+        </button>`;
     }
+  }
+}
+
+function mostrarMaisFiltro() {
+  const wrap    = document.getElementById('proj-more-wrap');
+  const filter  = wrap.dataset.filter;
+  let visiveis  = parseInt(wrap.dataset.visiveis);
+  visiveis      = visiveis + 5;
+  wrap.dataset.visiveis = visiveis;
+
+  const cards = Array.from(document.querySelectorAll('.proj-card')).filter(card => {
+    const type   = card.dataset.type;
+    const status = card.dataset.status;
+    return filter === 'ongoing'   ? status === 'ongoing' :
+           filter === 'completed' ? status === 'completed' :
+           filter === 'academic'  ? (type === 'academic' || type === 'both') :
+           filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
   });
 
-  // Esconde botão "ver mais" quando filtro ativo (mostra tudo do filtro)
-  const wrap = document.getElementById('proj-more-wrap');
-  wrap.innerHTML = '';
+  cards.forEach((c, i) => { if (i < visiveis) c.classList.remove('collapsed'); });
+
+  const ocultos = cards.length - visiveis;
+  if (ocultos <= 0) {
+    wrap.innerHTML = '';
+  } else {
+    wrap.innerHTML = `
+      <button class="show-more-btn" onclick="mostrarMaisFiltro()">
+        Ver mais projetos
+        <span class="count">+${Math.min(ocultos, 5)}</span>
+        <span class="arrow">↓</span>
+      </button>`;
+  }
 }
 
 /* ── ROUTER ───────────────────────────────────────── */
