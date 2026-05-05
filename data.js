@@ -127,6 +127,15 @@ const EQUIPE = [
     lattes:    "https://lattes.cnpq.br/0000000000000007",
   },
   {
+    iniciais:  "ACTS”",
+    foto:      "fotos/alexandre.jpeg",
+    nome:      "MSc. Alexandre Castro de Toledo Santos",
+    cargo:     "Doutorando",
+    area:      "Instrumentação Eletrônica, Controles e Automação",
+    categoria: "doutorando",
+    lattes:    "http://lattes.cnpq.br/5028876051950974",
+  },
+  {
     iniciais:  "JRF",
     foto:      "fotos/jrf.jpg",
     nome:      "Jade Rodrigues de França",
@@ -136,7 +145,6 @@ const EQUIPE = [
     lattes:    "http://lattes.cnpq.br/8422219411385338",
   },
 ];
-
 // ── PUBLICAÇÕES ────────────────────────────────────────────
 //
 //  Campos:
