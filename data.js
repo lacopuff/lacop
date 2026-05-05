@@ -127,13 +127,13 @@ const EQUIPE = [
     lattes:    "https://lattes.cnpq.br/0000000000000007",
   },
   {
-    iniciais:  "JP",
-    foto:      "fotos/joao-pedro.jpg",
-    nome:      "João Pedro Lima",
+    iniciais:  "JRF",
+    foto:      "fotos/jrf.jpg",
+    nome:      "Jade Rodrigues de França",
     cargo:     "Bolsista IC",
-    area:      "Caracterização de componentes ópticos passivos.",
+    area:      "Internet das Coisas aplicada a Agricultura 4.0",
     categoria: "ic",
-    lattes:    "https://lattes.cnpq.br/0000000000000008",
+    lattes:    "http://lattes.cnpq.br/8422219411385338",
   },
 ];
 
