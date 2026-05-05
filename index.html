@@ -473,9 +473,22 @@ function stripeClass(tipo, status) {
 const PROJ_INICIAL = 6;   // quantos projetos mostrar inicialmente
 const PUB_INICIAL  = 5;   // quantas publicações mostrar inicialmente
 
+function anoInicio(periodo) {
+  // Extrai o ano de início do campo periodo (ex: "2023–atual" → 2023)
+  const m = (periodo || '').match(/(\d{4})/);
+  return m ? parseInt(m[1]) : 0;
+}
+
 function renderProjects() {
+  // Ordena: em andamento primeiro, depois por ano de início decrescente
+  const sorted = [...PROJETOS].sort((a, b) => {
+    if (a.status === 'ongoing' && b.status !== 'ongoing') return -1;
+    if (a.status !== 'ongoing' && b.status === 'ongoing') return 1;
+    return anoInicio(b.periodo) - anoInicio(a.periodo);
+  });
+
   const grid = document.getElementById('projects-grid');
-  grid.innerHTML = PROJETOS.map((p, i) => {
+  grid.innerHTML = sorted.map((p, i) => {
     const chips = [
       p.status === 'ongoing'
         ? '<span class="chip chip-on">Em andamento</span>'
@@ -499,7 +512,8 @@ function renderProjects() {
         </div>
       </div>`;
   }).join('');
-  renderProjMoreBtn(PROJ_INICIAL); projVisiveis = PROJ_INICIAL;
+  projVisiveis = PROJ_INICIAL;
+  renderProjMoreBtn(projVisiveis);
 }
 
 function renderProjMoreBtn(visiveis) {
@@ -638,7 +652,9 @@ function renderContact() {
 function fp(filter, btn) {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  // Ao filtrar, expande tudo para mostrar resultados completos
+
+  // Filtra mantendo a ordem já renderizada (em andamento primeiro, depois por ano)
+  let visivelCount = 0;
   document.querySelectorAll('.proj-card').forEach(card => {
     const type   = card.dataset.type;
     const status = card.dataset.status;
@@ -648,13 +664,17 @@ function fp(filter, btn) {
       filter === 'completed' ? status === 'completed' :
       filter === 'academic'  ? (type === 'academic' || type === 'both') :
       filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
-    card.classList.toggle('hidden',    !match);
-    card.classList.toggle('collapsed', false); // remove collapsed ao filtrar
+
+    card.classList.toggle('hidden', !match);
+    if (match) {
+      card.classList.remove('collapsed');
+      visivelCount++;
+    }
   });
-  // Esconde o botão "ver mais" quando filtro ativo
+
+  // Esconde botão "ver mais" quando filtro ativo (mostra tudo do filtro)
   const wrap = document.getElementById('proj-more-wrap');
-  if (filter === 'all') renderProjMoreBtn(PROJETOS.length);
-  else wrap.innerHTML = '';
+  wrap.innerHTML = '';
 }
 
 /* ── ROUTER ───────────────────────────────────────── */
