@@ -17,7 +17,7 @@
 // ── INFORMAÇÕES GERAIS DO LABORATÓRIO ─────────────────────
 const LAB = {
   sigla:         "LACOP",
-  nomeCompleto:  "Laboratório de Comunicaçãoes Ópticas, Sensores e Instrumentação",
+  nomeCompleto:  "Laboratório de Comunicações Ópticas, Sensores e Instrumentação",
   universidade:  "Universidade Federal Fluminense — Departamento de Engenharia de Telecomunicações",
   descricao:     "Laboratório de pesquisa aplicada em comunicações óticas, instrumentação e sensores para aplicações diversas.",
   email:         "viniciusnhs@id.uff.br",
