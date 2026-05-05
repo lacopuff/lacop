@@ -92,7 +92,7 @@ const EQUIPE = [
   },
   {
     iniciais:  "MAG",
-    foto:      "fotos/mag.jpg",
+    foto:      "fotos/mag.png",
     nome:      "MSc. Márcio Alexandre Dias Garrido",
     cargo:     "Doutorando",
     area:      "Sistemas de comunicações ópticas em espaço livre",
@@ -101,7 +101,7 @@ const EQUIPE = [
   },
   {
     iniciais:  "AACB",
-    foto:      "fotos/aacb.jpg",
+    foto:      "fotos/aacb.png",
     nome:      "MSc. Antonio Adade de Castro Batista",
     cargo:     "Doutorando",
     area:      "Sistemas de comunicações ópticas sem fio no visível",
