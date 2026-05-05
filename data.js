@@ -101,7 +101,7 @@ const EQUIPE = [
   },
   {
     iniciais:  "AACB",
-    foto:      "fotos/aacb.png",
+    foto:      "fotos/aacb.jpg",
     nome:      "MSc. Antonio Adade de Castro Batista",
     cargo:     "Doutorando",
     area:      "Sistemas de comunicações ópticas sem fio no visível",
