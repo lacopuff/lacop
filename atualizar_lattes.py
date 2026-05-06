@@ -25,6 +25,9 @@ import os, re, json, glob, zipfile
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
+# Garante que o script sempre roda na pasta onde ele está salvo
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 LATTES_DIR = "lattes"
 DATA_JS    = "data.js"
 ANO_MIN    = datetime.now().year - 6
