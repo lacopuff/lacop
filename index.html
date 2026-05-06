@@ -502,7 +502,7 @@ function renderMain() {
   document.title = LAB.sigla + ' — ' + LAB.nomeCompleto;
   document.getElementById('nav-sigla').textContent   = LAB.sigla;
   document.getElementById('hero-univ').textContent   = LAB.universidade;
-  document.getElementById('hero-desc').textContent   = LAB.descricao;
+  document.getElementById('hero-desc').style.display = 'none';
   document.getElementById('footer-sigla').textContent = LAB.sigla;
   document.getElementById('footer-year').textContent  = new Date().getFullYear();
   document.getElementById('footer-univ').textContent  = LAB.universidade;
@@ -521,9 +521,7 @@ function renderMain() {
     { label: 'Pesquisadores',      valor: EQUIPE.filter(m => (m.categoria||'pesquisador') === 'pesquisador').length },
     { label: 'Alunos',             valor: EQUIPE.filter(m => (m.categoria||'pesquisador') !== 'pesquisador').length },
     { label: 'Publicações',        valor: (typeof PUBLICACOES !== 'undefined') ? PUBLICACOES.length : 0 },
-    { label: 'Patentes',           valor: (typeof PATENTES   !== 'undefined') ? PATENTES.length   : 0 },
-    { label: 'Parceiros',          valor: (typeof PARCEIROS  !== 'undefined') ?
-                                     Object.values(PARCEIROS).reduce((a, b) => a + b.length, 0) : 0 },
+    { label: 'Patentes',           valor: (typeof PATENTES !== 'undefined') ? PATENTES.length : 0 },
   ];
   const statsEl = document.getElementById('hero-stats');
   statsEl.innerHTML = statsAuto.map(s =>
