@@ -228,8 +228,13 @@
     .back-btn::before { content:'←'; }
     .back-btn:hover { color:#7eb8e8; border-color:#7eb8e8; }
     .detail-meta  { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+    .detail-hero-layout { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+    .detail-hero-layout.no-foto { grid-template-columns:1fr; }
     .detail-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:500; line-height:1.2; color:#ffffff; margin-bottom:1rem; }
     .detail-lead  { font-size:1.05rem; color:rgba(255,255,255,0.6); max-width:720px; line-height:1.75; }
+    .detail-hero-foto { width:240px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); }
+    .detail-hero-foto img { width:100%; height:160px; object-fit:cover; display:block; }
+    .detail-hero-foto-caption { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:rgba(255,255,255,0.35); padding:.4rem .7rem; background:rgba(0,0,0,0.2); line-height:1.4; }
     .detail-body  { max-width:960px; margin:0 auto; padding:3rem 2rem 5rem; }
     .detail-grid  { display:grid; grid-template-columns:1fr 300px; gap:3rem; align-items:start; }
     .detail-section { margin-bottom:2.5rem; }
@@ -257,6 +262,29 @@
     .progress-label { display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); margin-bottom:.4rem; }
     .progress-bar   { height:3px; background:var(--faint); border-radius:2px; overflow:hidden; }
     .progress-fill  { height:100%; background:var(--cyan); border-radius:2px; }
+
+    /* LINHA DO TEMPO */
+    .timeline { display:flex; flex-direction:column; }
+    .tl-item { display:grid; grid-template-columns:80px 20px 1fr; gap:0 14px; }
+    .tl-date { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); text-align:right; padding-top:2px; line-height:1.4; }
+    .tl-spine { display:flex; flex-direction:column; align-items:center; }
+    .tl-dot { width:10px; height:10px; border-radius:50%; background:var(--cyan); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--cyan); flex-shrink:0; margin-top:2px; }
+    .tl-dot.done { background:var(--green); box-shadow:0 0 0 2px var(--green); }
+    .tl-line { flex:1; width:2px; background:var(--faint); margin:4px 0; min-height:16px; }
+    .tl-item:last-child .tl-line { display:none; }
+    .tl-content { padding-bottom:1.75rem; }
+    .tl-title { font-family:'Fraunces',serif; font-size:1rem; font-weight:500; color:var(--text); margin-bottom:.3rem; }
+    .tl-text  { font-size:.85rem; color:var(--text3); line-height:1.7; margin-bottom:.6rem; }
+    .tl-images { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:6px; margin-top:.6rem; }
+    .tl-img   { border-radius:4px; overflow:hidden; border:1px solid var(--border2); }
+    .tl-img img { width:100%; height:110px; object-fit:cover; display:block; transition:transform .3s; }
+    .tl-img:hover img { transform:scale(1.04); }
+    .tl-img-caption { font-family:'IBM Plex Mono',monospace; font-size:.62rem; color:var(--muted); padding:.3rem .5rem; background:var(--panel); line-height:1.4; }
+
+    /* LINKS DO PROJETO */
+    .proj-links { display:flex; flex-wrap:wrap; gap:.5rem; }
+    .proj-ext-link { font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.05em; color:var(--cyan); border:1px solid var(--border); background:var(--panel); padding:.35rem .85rem; border-radius:2px; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; transition:background .2s,border-color .2s; }
+    .proj-ext-link:hover { background:var(--panel2); border-color:var(--cyan); }
 
     /* SHOW MORE */
     .proj-card.collapsed { display:none; }
@@ -290,6 +318,8 @@
       .contact-inner{grid-template-columns:1fr;gap:3rem}
       footer{flex-direction:column;align-items:flex-start}
       .detail-grid{grid-template-columns:1fr}
+      .detail-hero-layout{grid-template-columns:1fr}
+      .detail-hero-foto{display:none}
     }
   </style>
 </head>
@@ -350,19 +380,19 @@
       <div class="sec-header"><p class="sec-label">Expertise</p><h2 class="sec-title">Áreas de <em>Atuação</em></h2></div>
       <div class="areas-grid">
         <div class="area-card ac-optical">
-          
+          <span class="area-num">// 01</span><span class="area-icon">🔵</span>
           <h3 class="area-title">Comunicações Ópticas</h3>
           <p class="area-desc">Desenvolvimento e análise de sistemas de transmissão por fibra óptica (plásticas e sílica), sistemas ópticos sem fio (VLC, FSO) e processamento de sinais aplicados para aumento da capacidade de transmissão.</p>
           <div class="area-topics"><span class="area-topic">WDM / DWDM</span><span class="area-topic">FSO</span><span class="area-topic">VLC</span><span class="area-topic">OWC</span><span class="area-topic">POF</span><span class="area-topic">Redes PON</span></div>
         </div>
         <div class="area-card ac-inst">
-          
+          <span class="area-num">// 02</span><span class="area-icon">🟡</span>
           <h3 class="area-title">Instrumentação</h3>
           <p class="area-desc">Instrumentação aplicada a Internet das Coisas, Agricultura 4.0, Indústria 4.0 e Integrated Sensing and Communication.</p>
           <div class="area-topics"><span class="area-topic">IoT</span><span class="area-topic">AGRO</span><span class="area-topic">Interferometria</span><span class="area-topic">ISAC</span><span class="area-topic">Metrologia óptica</span><span class="area-topic">Calibração</span></div>
         </div>
         <div class="area-card ac-sensor">
-          
+          <span class="area-num">// 03</span><span class="area-icon">🟢</span>
           <h3 class="area-title">Sensores</h3>
           <p class="area-desc">Sensores a fibra óptica, interferométricos e em espaço livre para monitoramento estrutural, ambiental, segurança patrimonial, entre outros.</p>
           <div class="area-topics"><span class="area-topic">FBG</span><span class="area-topic">Interferometria</span><span class="area-topic">LPG</span><span class="area-topic">EFBG</span><span class="area-topic">ISAC-FSO</span><span class="area-topic">Sensor de deformação</span></div>
@@ -449,8 +479,13 @@
     <div class="detail-inner">
       <button class="back-btn" onclick="goBack()">Voltar aos Projetos</button>
       <div class="detail-meta" id="detail-meta"></div>
-      <h1 class="detail-title" id="detail-title"></h1>
-      <p class="detail-lead"  id="detail-lead"></p>
+      <div class="detail-hero-layout" id="detail-hero-layout">
+        <div>
+          <h1 class="detail-title" id="detail-title"></h1>
+          <p class="detail-lead"  id="detail-lead"></p>
+        </div>
+        <div id="detail-hero-foto"></div>
+      </div>
     </div>
   </div>
   <div class="detail-body">
@@ -867,12 +902,67 @@ function renderDetail(p) {
   const typeChip = (p.tipo === 'rd' || p.tipo === 'both')
     ? '<span class="chip chip-rd">P&amp;D</span>' : '';
 
-  document.getElementById('detail-meta').innerHTML  = statusChip + typeChip + `<span class="chip-year">${p.periodo}</span>`;
+  document.getElementById('detail-meta').innerHTML   = statusChip + typeChip + `<span class="chip-year">${p.periodo}</span>`;
   document.getElementById('detail-title').textContent = p.titulo;
   document.getElementById('detail-lead').textContent  = p.descricao;
 
-  // Left column
+  // ── Foto no hero (opcional) ───────────────────────────
+  const fotoEl    = document.getElementById('detail-hero-foto');
+  const layoutEl  = document.getElementById('detail-hero-layout');
+  if (p.foto_destaque) {
+    fotoEl.innerHTML = `
+      <div class="detail-hero-foto">
+        <img src="${p.foto_destaque.src}" alt="${p.foto_destaque.legenda || p.titulo}" loading="lazy">
+        ${p.foto_destaque.legenda ? `<p class="detail-hero-foto-caption">${p.foto_destaque.legenda}</p>` : ''}
+      </div>`;
+    layoutEl.classList.remove('no-foto');
+  } else {
+    fotoEl.innerHTML = '';
+    layoutEl.classList.add('no-foto');
+  }
+
   let left = '';
+
+  // ── Linha do tempo ────────────────────────────────────
+  if (p.marcos && p.marcos.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Linha do Tempo</p>
+      <div class="timeline">
+        ${p.marcos.map(m => `
+          <div class="tl-item">
+            <div class="tl-date">${m.data || ''}</div>
+            <div class="tl-spine">
+              <div class="tl-dot${m.concluido ? ' done' : ''}"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-content">
+              <p class="tl-title">${m.titulo}</p>
+              ${m.texto ? `<p class="tl-text">${m.texto}</p>` : ''}
+              ${m.imagens && m.imagens.length ? `
+                <div class="tl-images">
+                  ${m.imagens.map(img => `
+                    <div class="tl-img">
+                      <img src="${img.src}" alt="${img.legenda || ''}" loading="lazy">
+                      ${img.legenda ? `<p class="tl-img-caption">${img.legenda}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── Links úteis ───────────────────────────────────────
+  if (p.links && p.links.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Links</p>
+      <div class="proj-links">
+        ${p.links.map(l => `<a class="proj-ext-link" href="${l.url}" target="_blank" rel="noopener">${l.icone || '🔗'} ${l.label}</a>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── Seções textuais ───────────────────────────────────
   if (p.objetivos && p.objetivos.length) {
     left += `<div class="detail-section">
       <p class="detail-section-label">Objetivos</p>
@@ -907,7 +997,7 @@ function renderDetail(p) {
   </div>`;
   document.getElementById('detail-left').innerHTML = left;
 
-  // Right sidebar
+  // ── Sidebar ───────────────────────────────────────────
   let right = `
     <div class="sidebar-card">
       <p class="sidebar-title">Progresso</p>
