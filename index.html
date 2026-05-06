@@ -514,10 +514,20 @@ function renderMain() {
     parts.slice(0, mid).join(' ') + '<br><span class="gold">' + parts.slice(mid).join(' ') + '</span>';
 
   // Stats
+  // Stats calculados automaticamente dos arrays reais
+  const statsAuto = [
+    { label: 'Proj. em Andamento', valor: PROJETOS.filter(p => p.status === 'ongoing').length },
+    { label: 'Proj. Finalizados',  valor: PROJETOS.filter(p => p.status === 'completed').length },
+    { label: 'Pesquisadores',      valor: EQUIPE.filter(m => (m.categoria||'pesquisador') === 'pesquisador').length },
+    { label: 'Alunos',             valor: EQUIPE.filter(m => (m.categoria||'pesquisador') !== 'pesquisador').length },
+    { label: 'Publicações',        valor: (typeof PUBLICACOES !== 'undefined') ? PUBLICACOES.length : 0 },
+    { label: 'Patentes',           valor: (typeof PATENTES   !== 'undefined') ? PATENTES.length   : 0 },
+    { label: 'Parceiros',          valor: (typeof PARCEIROS  !== 'undefined') ?
+                                     Object.values(PARCEIROS).reduce((a, b) => a + b.length, 0) : 0 },
+  ];
   const statsEl = document.getElementById('hero-stats');
-  const labels = { projetos:'Projetos', pesquisadores:'Pesquisadores', publicacoes:'Publicações', patentes:'Patentes', parceiros:'Parceiros' };
-  statsEl.innerHTML = Object.entries(LAB.stats).map(([k,v]) =>
-    `<div class="stat-item"><span class="stat-num">${v}</span><span class="stat-label">${labels[k]}</span></div>`
+  statsEl.innerHTML = statsAuto.map(s =>
+    `<div class="stat-item"><span class="stat-num">${s.valor}</span><span class="stat-label">${s.label}</span></div>`
   ).join('');
 
   renderProjects();
