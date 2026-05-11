@@ -1,0 +1,22 @@
+# ambiente virtual
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# backups locais do app (opcional: versionar se quiser)
+# data_backup_*.js
+
+# OS
+.DS_Store
