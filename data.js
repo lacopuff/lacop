@@ -1449,7 +1449,14 @@ const PROJETOS = [
     metodologia: "",
     resultados:  [],
     publicacoes: [],
-  },
+        marcos: [
+      {
+        data:      "Março 2025",
+        titulo:    "Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior",
+        concluido: true,
+      },
+    ],
+},
   {
     id:          "p28",
     titulo:      "Implementação de Ações de Segurança em Fazendas Solares",
