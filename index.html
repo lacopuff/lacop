@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="page-title">LACOP - Laboratório de Comunicações Ópticas </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#f7f9fc; --bg2:#eef3f9; --bg3:#e4ecf5;
+      --panel:#ffffff; --panel2:#f0f5fb;
+      --cyan:#2a7fd4; --cyan-dim:#1a5fa8;
+      --gold:#d48a10; --gold-lt:#f0a830;
+      --green:#1a8c58;
+      --white:#1e3a5f; --muted:#6a7e94; --faint:#d0dce8;
+      --border:rgba(42,127,212,0.15); --border2:rgba(0,0,0,0.07);
+      --text:#1e3a5f; --text2:#3a5070; --text3:#6a7e94;
+      --navy:#1e3a5f; --navy2:#16304f; --navy3:#0f2540;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--white); line-height:1.7; overflow-x:hidden; }
+    ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--cyan-dim);border-radius:3px}
+
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:200; height:60px; padding:0 2.5rem; display:flex; align-items:center; justify-content:space-between; background:rgba(30,58,95,0.97); backdrop-filter:blur(16px); border-bottom:1px solid rgba(255,255,255,0.08); }
+    .nav-logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; cursor:pointer; }
+    .nav-logo-icon { width:28px; height:28px; border:1.5px solid #7eb8e8; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .nav-logo-icon::after { content:''; width:8px; height:8px; background:#7eb8e8; border-radius:50%; }
+    .nav-logo-text { font-family:'IBM Plex Mono',monospace; font-size:.85rem; font-weight:500; color:#7eb8e8; letter-spacing:.1em; }
+    .nav-links { display:flex; gap:1.75rem; list-style:none; }
+    .nav-links a { font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none; transition:color .2s; cursor:pointer; }
+    .nav-links a:hover { color:#7eb8e8; }
+
+    /* PAGE VIEWS */
+    #view-main   { display:block; }
+    #view-detail { display:none; }
+
+    /* HERO */
+    .hero { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6rem 2rem 4rem; position:relative; overflow:hidden; text-align:center; background:#1e3a5f; }
+    .hero-fiber { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .fiber-svg { position:absolute; top:0; left:0; width:100%; height:100%; opacity:.2; }
+    .fiber-path   { fill:none; stroke:#7eb8e8; stroke-width:1;   stroke-dasharray:800; stroke-dashoffset:800; animation:fiber-draw 3s ease forwards; }
+    .fiber-path-2 { fill:none; stroke:#f0a830; stroke-width:.7;  stroke-dasharray:600; stroke-dashoffset:600; animation:fiber-draw 3s .4s ease forwards; }
+    .fiber-path-3 { fill:none; stroke:#4acb8c; stroke-width:.5;  stroke-dasharray:700; stroke-dashoffset:700; animation:fiber-draw 3s .8s ease forwards; }
+    @keyframes fiber-draw { to { stroke-dashoffset:0; } }
+    .hero::before { content:''; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,0.025) 59px,rgba(255,255,255,0.025) 60px); }
+    .hero::after  { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(42,127,212,0.15) 0%,transparent 65%); }
+    .hero-content { position:relative; z-index:2; max-width:900px; }
+    .hero-mono { font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:#7eb8e8; display:flex; align-items:center; gap:.75rem; justify-content:center; margin-bottom:1.75rem; animation:fadeUp .6s ease both; }
+    .hero-mono::before,.hero-mono::after { content:''; height:1px; width:40px; background:#3a6898; }
+    .hero-pillars { display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; animation:fadeUp .6s .05s ease both; }
+    .hero-pillar { font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; padding:.28rem .9rem; border-radius:2px; border:1px solid; }
+    .hp-optical { border-color:#7eb8e8; color:#7eb8e8; }
+    .hp-inst    { border-color:#f0c96a; color:#f0c96a; }
+    .hp-sensor  { border-color:#4acb8c; color:#4acb8c; }
+    .hero h1 { font-family:'Fraunces',serif; font-size:clamp(2.6rem,5.5vw,4.8rem); font-weight:500; line-height:1.12; color:#ffffff; margin-bottom:1.5rem; animation:fadeUp .7s .1s ease both; }
+    .hero h1 em   { font-style:italic; color:var(--cyan); }
+    .hero h1 .gold { color:var(--gold-lt); }
+    .hero-desc { font-size:1rem; color:rgba(255,255,255,0.55); max-width:620px; margin:0 auto 2.5rem; line-height:1.75; animation:fadeUp .7s .2s ease both; }
+    .hero-cta { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; animation:fadeUp .7s .3s ease both; }
+    .btn-cyan  { background:#2a7fd4; color:#ffffff; padding:.7rem 2rem; border-radius:3px; font-family:'IBM Plex Mono',monospace; font-size:.78rem; letter-spacing:.1em; text-decoration:none; font-weight:500; transition:box-shadow .2s,transform .15s; cursor:pointer; border:none; }
+    .btn-cyan:hover { background:#1a6fc4; transform:translateY(-1px); }
+    .btn-ghost { border:1px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); padding:.7rem 2rem; border-radius:3px; font-family:'IBM Plex Mono',monospace; font-size:.78rem; letter-spacing:.1em; text-decoration:none; transition:border-color .2s,color .2s,transform .15s; cursor:pointer; background:transparent; }
+    .btn-ghost:hover { border-color:#7eb8e8; color:#7eb8e8; transform:translateY(-1px); }
+    .hero-stats { display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; margin-top:5rem; padding-top:3rem; border-top:1px solid rgba(255,255,255,0.1); animation:fadeUp .7s .4s ease both; }
+    .stat-item { text-align:center; }
+    .stat-num { font-family:'Fraunces',serif; font-size:2.5rem; font-weight:500; color:#7eb8e8; display:block; line-height:1; }
+    .stat-label { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-top:.5rem; display:block; }
+
+    /* AREAS */
+    .areas-section { padding:6rem 2rem; background:var(--bg2); }
+    .areas-inner { max-width:1100px; margin:0 auto; }
+    .areas-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; margin-top:3.5rem; }
+    .area-card { background:var(--panel); padding:2.5rem 2rem; position:relative; overflow:hidden; transition:background .25s; }
+    .area-card:hover { background:var(--panel2); }
+    .area-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+    .area-card.ac-optical::before { background:var(--cyan); box-shadow:0 0 12px var(--cyan); }
+    .area-card.ac-inst::before    { background:var(--gold); box-shadow:0 0 12px var(--gold); }
+    .area-card.ac-sensor::before  { background:var(--green); box-shadow:0 0 12px var(--green); }
+    .area-num   { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.15em; color:var(--muted); margin-bottom:1.25rem; display:block; }
+    .area-icon  { font-size:2rem; margin-bottom:1rem; display:block; }
+    .area-title { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:500; margin-bottom:.75rem; line-height:1.25; }
+    .ac-optical .area-title { color:var(--cyan); }
+    .ac-inst    .area-title { color:var(--gold-lt); }
+    .ac-sensor  .area-title { color:var(--green); }
+    .area-desc   { font-size:.87rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem; }
+    .area-topics { display:flex; flex-wrap:wrap; gap:.4rem; }
+    .area-topic  { font-family:'IBM Plex Mono',monospace; font-size:.66rem; padding:.2rem .55rem; border-radius:2px; background:rgba(255,255,255,.04); color:var(--muted); border:1px solid var(--border2); }
+
+    /* SECTIONS */
+    section.std     { padding:6rem 2rem; background:var(--bg); }
+    section.std-alt { padding:6rem 2rem; background:var(--bg2); }
+    .section-inner { max-width:1100px; margin:0 auto; }
+    .sec-header { margin-bottom:3rem; }
+    .sec-label { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:.6rem; margin-bottom:.6rem; }
+    .sec-label::before { content:''; display:inline-block; width:20px; height:1px; background:var(--cyan); }
+    .sec-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:500; color:var(--white); line-height:1.2; }
+    .sec-title em { font-style:italic; color:var(--cyan); }
+
+    /* FILTER */
+    .filter-bar { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .f-btn { font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; padding:.4rem 1rem; border-radius:2px; cursor:pointer; border:1px solid var(--faint); background:transparent; color:var(--muted); transition:all .2s; }
+    .f-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+    .f-btn.active { background:#1e3a5f; color:#fff; border-color:#1e3a5f; }
+
+    /* PROJECT CARDS */
+    .projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5px; }
+    .proj-card { background:var(--panel); display:flex; flex-direction:column; transition:background .2s; border:1px solid var(--border2); }
+    .proj-card.hidden { display:none; }
+    .proj-card:hover { background:var(--panel2); box-shadow:0 4px 20px rgba(30,58,95,0.1); }
+    .proj-stripe { height:3px; }
+    .stripe-academic-ongoing   { background:linear-gradient(90deg,var(--green),var(--cyan)); }
+    .stripe-rd-ongoing         { background:linear-gradient(90deg,var(--green),var(--gold)); }
+    .stripe-both-ongoing       { background:linear-gradient(90deg,var(--green),var(--cyan),var(--gold)); }
+    .stripe-academic-completed { background:var(--cyan); }
+    .stripe-rd-completed       { background:var(--gold); }
+    .stripe-both-completed     { background:linear-gradient(90deg,var(--cyan),var(--gold)); }
+    .proj-body { padding:1.5rem; flex:1; }
+    .proj-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .chip { font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:.18rem .55rem; border-radius:2px; }
+    .chip-on   { background:#e0f5ec; color:#0d6640; border:1px solid #a8dcc0; }
+    .chip-done { background:#e8f0fa; color:#1a5fa8; border:1px solid #b8d0f0; }
+    .chip-rd   { background:#fdf0da; color:#8a5c10; border:1px solid #e8d090; }
+    .chip-year { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); }
+    .proj-title { font-family:'Fraunces',serif; font-size:1.12rem; font-weight:500; color:var(--white); margin-bottom:.6rem; line-height:1.35; cursor:pointer; transition:color .2s; }
+    .proj-title:hover { color:var(--cyan); }
+    .proj-desc  { font-size:.85rem; color:var(--muted); line-height:1.65; margin-bottom:1.2rem; }
+    .proj-tags  { display:flex; flex-wrap:wrap; gap:.35rem; }
+    .tag { font-family:'IBM Plex Mono',monospace; font-size:.62rem; padding:.15rem .5rem; border-radius:2px; background:rgba(255,255,255,.04); color:var(--muted); border:1px solid var(--border2); }
+    .proj-footer { padding:.9rem 1.5rem; border-top:1px solid var(--faint); display:flex; justify-content:space-between; align-items:center; }
+    .proj-pi { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); }
+    .proj-link { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--cyan); text-decoration:none; letter-spacing:.05em; transition:color .2s; cursor:pointer; background:none; border:none; padding:0; }
+    .proj-link:hover { color:#1e3a5f; }
+    .proj-link::after { content:' →'; }
+
+    /* TEAM */
+    .team-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1.5px; }
+    .team-category { max-width:1100px; margin:0 auto 3rem; }
+    .team-category-label {
+      font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--cyan);
+      display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;
+    }
+    .team-category-label::after { content:''; flex:1; height:1px; background:var(--faint); }
+    .member { background:var(--panel); padding:1.75rem 1.25rem; text-align:center; border:1px solid var(--border2); transition:background .2s, border-color .2s; cursor:pointer; }
+    .member:hover { background:var(--panel2); border-color:var(--cyan); box-shadow:0 4px 20px rgba(30,58,95,0.1); }
+    .member:hover .m-name { color:var(--cyan); }
+    .member-link { display:block; text-decoration:none; color:inherit; }
+    .m-avatar { width:72px; height:72px; border-radius:50%; background:#1e3a5f; border:1.5px solid var(--cyan); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-family:'Fraunces',serif; font-size:1.2rem; font-weight:500; color:#7eb8e8; overflow:hidden; flex-shrink:0; }
+    .m-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+    .m-name { font-family:'Fraunces',serif; font-size:1rem; font-weight:500; color:var(--white); margin-bottom:.25rem; }
+    .m-role { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.1em; color:var(--cyan); text-transform:uppercase; margin-bottom:.5rem; }
+    .m-area { font-size:.8rem; color:var(--muted); line-height:1.5; }
+
+    /* PUBLICATIONS */
+    .pub-list { display:flex; flex-direction:column; gap:1.5px; }
+    .pub-category { margin-bottom:3rem; }
+    .pub-category-label {
+      font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em;
+      text-transform:uppercase; color:var(--cyan);
+      display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;
+    }
+    .pub-category-label::after { content:''; flex:1; height:1px; background:var(--faint); }
+    .pub-item { background:var(--panel); padding:1.4rem 1.75rem; border:1px solid var(--border2); display:grid; grid-template-columns:1fr auto; gap:1.5rem; align-items:start; transition:background .2s; position:relative; }
+    .pub-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--faint); transition:background .2s; }
+    .pub-item:hover { background:var(--panel2); }
+    .pub-item:hover::before { background:var(--cyan); }
+    .pub-title   { font-family:'Fraunces',serif; font-size:.98rem; font-weight:500; color:var(--white); margin-bottom:.35rem; line-height:1.4; }
+    .pub-title a { color:var(--text); text-decoration:none; transition:color .2s; }
+    .pub-title a:hover { color:var(--cyan); }
+    .pub-authors { font-size:.8rem; color:var(--muted); margin-bottom:.3rem; }
+    .pub-venue   { font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--cyan-dim); }
+    .pub-doi     { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--cyan-dim); text-decoration:none; border-bottom:1px solid rgba(0,200,232,.25); padding-bottom:1px; transition:color .2s, border-color .2s; }
+    .pub-doi:hover { color:var(--cyan); border-color:var(--cyan); }
+    .pub-year    { font-family:'Fraunces',serif; font-size:1.6rem; font-weight:300; color:#c0ccd8; white-space:nowrap; }
+
+    /* PATENTS */
+    .patent-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1.5px; }
+    .patent-item { background:var(--panel); padding:1.5rem; border:1px solid var(--border2); display:flex; gap:1.1rem; align-items:flex-start; transition:background .2s; }
+    .patent-item:hover { background:var(--panel2); }
+    .patent-ico  { width:42px; height:42px; flex-shrink:0; border-radius:4px; background:var(--bg3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .patent-title { font-family:'Fraunces',serif; font-size:.95rem; font-weight:500; color:var(--white); margin-bottom:.3rem; line-height:1.35; }
+    .patent-num   { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); margin-bottom:.5rem; }
+    .pat-chip     { font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; padding:.15rem .55rem; border-radius:2px; display:inline-block; }
+    .pat-granted  { background:#e0f5ec; color:#0d6640; border:1px solid #a8dcc0; }
+    .pat-pending  { background:#fdf0da; color:#8a5c10; border:1px solid #e8d090; }
+
+    /* PARTNERS */
+    .partners-wrap  { padding:5rem 2rem; background:#1e3a5f; }
+    .partners-inner { max-width:1100px; margin:0 auto; }
+    .partners-label { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:#7eb8e8; text-align:center; display:flex; align-items:center; justify-content:center; gap:.75rem; margin-bottom:.6rem; }
+    .partners-label::before,.partners-label::after { content:''; height:1px; width:50px; background:rgba(255,255,255,0.15); }
+    .partners-title { font-family:'Fraunces',serif; font-size:1.8rem; font-weight:300; text-align:center; color:#fff; margin-bottom:2.5rem; }
+    .partner-groups { display:flex; flex-direction:column; gap:2.5rem; }
+    .partner-group-label { font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+    .partner-group-label::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.12); }
+    .partner-row { display:flex; flex-wrap:wrap; gap:.75rem; }
+    .partner-pill { font-family:'IBM Plex Mono',monospace; font-size:.75rem; padding:.55rem 1.25rem; border:1px solid var(--faint); border-radius:2px; color:rgba(255,255,255,0.6); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); transition:all .2s; }
+    .partner-pill:hover { border-color:rgba(126,184,232,0.5); color:#fff; background:rgba(255,255,255,0.1); }
+
+    /* CONTACT */
+    .contact-wrap  { padding:6rem 2rem; background:var(--bg2); }
+    .contact-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+    .contact-lhs h2 { font-family:'Fraunces',serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:400; color:var(--text); line-height:1.3; margin-bottom:1rem; }
+    .contact-lhs h2 em { font-style:italic; color:var(--cyan); }
+    .contact-lhs p { font-size:.92rem; color:var(--muted); line-height:1.75; max-width:400px; }
+    .contact-rhs { display:flex; flex-direction:column; gap:1.25rem; }
+    .c-item  { display:flex; gap:1rem; align-items:flex-start; }
+    .c-icon  { width:38px; height:38px; flex-shrink:0; border-radius:3px; background:rgba(42,127,212,.08); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+    .c-label { font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--cyan); display:block; margin-bottom:.2rem; }
+    .c-value { font-size:.88rem; color:var(--text2); }
+
+    /* FOOTER */
+    footer { padding:1.5rem 2.5rem; background:#0f2540; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+    .footer-logo { font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:rgba(255,255,255,0.4); }
+    .footer-logo span { color:var(--cyan); }
+    .footer-copy { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:rgba(255,255,255,0.2); }
+
+    /* DETAIL PAGE */
+    #view-detail { padding-top:60px; min-height:100vh; background:var(--bg); }
+    .detail-hero { padding:4rem 2rem 3rem; background:#1e3a5f; border-bottom:1px solid rgba(255,255,255,0.08); position:relative; overflow:hidden; }
+    .detail-hero::after { content:''; position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 60% 80% at 0% 50%,rgba(42,127,212,.1) 0%,transparent 60%); }
+    .detail-inner { max-width:960px; margin:0 auto; position:relative; z-index:1; }
+    .back-btn { font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); background:transparent; border:1px solid rgba(255,255,255,0.2); padding:.4rem 1rem; border-radius:2px; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; transition:color .2s,border-color .2s; margin-bottom:2rem; }
+    .back-btn::before { content:'←'; }
+    .back-btn:hover { color:#7eb8e8; border-color:#7eb8e8; }
+    .detail-meta  { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+    .detail-hero-layout { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+    .detail-hero-layout.no-foto { grid-template-columns:1fr; }
+    .detail-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:500; line-height:1.2; color:#ffffff; margin-bottom:1rem; }
+    .detail-lead  { font-size:1.05rem; color:rgba(255,255,255,0.6); max-width:720px; line-height:1.75; }
+    .detail-hero-foto { width:240px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); }
+    .detail-hero-foto img { width:100%; height:160px; object-fit:cover; display:block; }
+    .detail-hero-foto-caption { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:rgba(255,255,255,0.35); padding:.4rem .7rem; background:rgba(0,0,0,0.2); line-height:1.4; }
+    .detail-body  { max-width:960px; margin:0 auto; padding:3rem 2rem 5rem; }
+    .detail-grid  { display:grid; grid-template-columns:1fr 300px; gap:3rem; align-items:start; }
+    .detail-section { margin-bottom:2.5rem; }
+    .detail-section-label { font-family:'IBM Plex Mono',monospace; font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--cyan); display:flex; align-items:center; gap:.6rem; margin-bottom:1rem; }
+    .detail-section-label::before { content:''; width:16px; height:1px; background:var(--cyan); }
+    .detail-section p { font-size:.92rem; color:var(--text2); line-height:1.8; margin-bottom:.75rem; }
+    .detail-section ul { list-style:none; display:flex; flex-direction:column; gap:.5rem; margin-bottom:.75rem; }
+    .detail-section ul li { font-size:.88rem; color:var(--text2); line-height:1.65; padding-left:1.2rem; position:relative; }
+    .detail-section ul li::before { content:'▸'; position:absolute; left:0; color:var(--cyan); font-size:.7rem; top:.2rem; }
+    .detail-sidebar { display:flex; flex-direction:column; gap:1.25rem; }
+    .sidebar-card { background:var(--panel); border:1px solid var(--border2); border-top:2px solid var(--cyan); padding:1.25rem; }
+    .sidebar-card.gold-top  { border-top-color:var(--gold); }
+    .sidebar-card.green-top { border-top-color:var(--green); }
+    .sidebar-title { font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-bottom:.75rem; }
+    .sidebar-item { font-size:.85rem; color:var(--text2); line-height:1.6; padding:.35rem 0; border-bottom:1px solid var(--border2); }
+    .sidebar-item:last-child { border-bottom:none; padding-bottom:0; }
+    .sidebar-item strong { color:var(--text); font-weight:500; display:block; font-size:.82rem; }
+    .sidebar-item span { font-size:.78rem; color:var(--muted); }
+    .detail-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.75rem; }
+    .rel-pub { background:var(--panel); border:1px solid var(--border2); border-left:2px solid var(--cyan-dim); padding:1rem 1.25rem; margin-bottom:1.5px; transition:background .2s; }
+    .rel-pub:hover { background:var(--panel2); border-left-color:var(--cyan); }
+    .rel-pub-title { font-family:'Fraunces',serif; font-size:.9rem; font-weight:500; color:var(--text); margin-bottom:.25rem; line-height:1.35; }
+    .rel-pub-meta  { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--cyan-dim); }
+    .progress-wrap  { margin-top:.5rem; }
+    .progress-label { display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:var(--muted); margin-bottom:.4rem; }
+    .progress-bar   { height:3px; background:var(--faint); border-radius:2px; overflow:hidden; }
+    .progress-fill  { height:100%; background:var(--cyan); border-radius:2px; }
+
+    /* LINHA DO TEMPO */
+    .timeline { display:flex; flex-direction:column; }
+    .tl-item { display:grid; grid-template-columns:80px 20px 1fr; gap:0 14px; }
+    .tl-date { font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--muted); text-align:right; padding-top:2px; line-height:1.4; }
+    .tl-spine { display:flex; flex-direction:column; align-items:center; }
+    .tl-dot { width:10px; height:10px; border-radius:50%; background:var(--cyan); border:2px solid var(--bg); box-shadow:0 0 0 2px var(--cyan); flex-shrink:0; margin-top:2px; }
+    .tl-dot.done { background:var(--green); box-shadow:0 0 0 2px var(--green); }
+    .tl-line { flex:1; width:2px; background:var(--faint); margin:4px 0; min-height:16px; }
+    .tl-item:last-child .tl-line { display:none; }
+    .tl-content { padding-bottom:1.75rem; }
+    .tl-title { font-family:'Fraunces',serif; font-size:1rem; font-weight:500; color:var(--text); margin-bottom:.3rem; }
+    .tl-text  { font-size:.85rem; color:var(--text3); line-height:1.7; margin-bottom:.6rem; }
+    .tl-images { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:6px; margin-top:.6rem; }
+    .tl-img   { border-radius:4px; overflow:hidden; border:1px solid var(--border2); }
+    .tl-img img { width:100%; height:110px; object-fit:cover; display:block; transition:transform .3s; }
+    .tl-img:hover img { transform:scale(1.04); }
+    .tl-img-caption { font-family:'IBM Plex Mono',monospace; font-size:.62rem; color:var(--muted); padding:.3rem .5rem; background:var(--panel); line-height:1.4; }
+
+    /* LINKS DO PROJETO */
+    .proj-links { display:flex; flex-wrap:wrap; gap:.5rem; }
+    .proj-ext-link { font-family:'IBM Plex Mono',monospace; font-size:.7rem; letter-spacing:.05em; color:var(--cyan); border:1px solid var(--border); background:var(--panel); padding:.35rem .85rem; border-radius:2px; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; transition:background .2s,border-color .2s; }
+    .proj-ext-link:hover { background:var(--panel2); border-color:var(--cyan); }
+
+    /* SHOW MORE */
+    .proj-card.collapsed { display:none; }
+    .pub-item.collapsed  { display:none; }
+    .show-more-wrap { text-align:center; margin-top:2rem; }
+    .show-more-btn {
+      font-family:'IBM Plex Mono',monospace; font-size:.75rem; letter-spacing:.1em;
+      text-transform:uppercase; padding:.6rem 2rem; border-radius:2px; cursor:pointer;
+      border:1px solid var(--faint); background:transparent; color:var(--cyan);
+      transition:all .2s; display:inline-flex; align-items:center; gap:.6rem;
+    }
+    .show-more-btn:hover { background:#1e3a5f; color:#fff; border-color:#1e3a5f; }
+    .show-more-btn .count {
+      background:var(--bg2); border:1px solid var(--faint);
+      padding:.1rem .5rem; border-radius:2px; font-size:.65rem;
+    }
+    .show-more-btn.expanded .arrow { display:inline-block; transform:rotate(180deg); }
+    .show-more-btn .arrow { display:inline-block; transition:transform .3s; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .detail-enter { animation:fadeIn .3s ease; }
+
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .hero{padding:7rem 1.5rem 4rem;text-align:left}
+      .hero-mono,.hero-pillars,.hero-cta{justify-content:flex-start}
+      .hero-stats{gap:2rem}
+      .areas-grid{grid-template-columns:1fr}
+      .pub-item{grid-template-columns:1fr}
+      .contact-inner{grid-template-columns:1fr;gap:3rem}
+      footer{flex-direction:column;align-items:flex-start}
+      .detail-grid{grid-template-columns:1fr}
+      .detail-hero-layout{grid-template-columns:1fr}
+      .detail-hero-foto{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="goHome()">
+    <div class="nav-logo-icon"></div>
+    <span class="nav-logo-text" id="nav-sigla">Lab</span>
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="goHome();navTo('areas')">Áreas</a></li>
+    <li><a onclick="goHome();navTo('projetos')">Projetos</a></li>
+    <li><a onclick="goHome();navTo('equipe')">Equipe</a></li>
+    <li><a onclick="goHome();navTo('publicacoes')">Publicações</a></li>
+    <li><a onclick="goHome();navTo('patentes')">Patentes</a></li>
+    <li><a onclick="goHome();navTo('parceiros')">Parceiros</a></li>
+    <li><a onclick="goHome();navTo('contato')">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN VIEW -->
+<div id="view-main">
+
+  <section class="hero">
+    <div class="hero-fiber">
+      <svg class="fiber-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <path class="fiber-path"   d="M-20,200 C200,200 300,450 600,420 S900,300 1100,380 S1300,500 1460,460"/>
+        <path class="fiber-path-2" d="M-20,500 C150,480 350,200 620,250 S900,400 1100,320 S1350,200 1460,240"/>
+        <path class="fiber-path-3" d="M-20,700 C180,680 400,600 680,620 S950,700 1150,650 S1350,580 1460,600"/>
+        <circle cx="600" cy="420" r="4" fill="none" stroke="#00c8e8" stroke-width="1" opacity="0.5"/>
+        <circle cx="620" cy="250" r="4" fill="none" stroke="#d4a843" stroke-width="1" opacity="0.5"/>
+        <circle cx="680" cy="620" r="4" fill="none" stroke="#00e5a0" stroke-width="1" opacity="0.5"/>
+        <text x="615" y="415" font-family="IBM Plex Mono" font-size="9" fill="#00c8e8" opacity="0.6">λ₁</text>
+        <text x="635" y="248" font-family="IBM Plex Mono" font-size="9" fill="#d4a843" opacity="0.6">λ₂</text>
+        <text x="695" y="617" font-family="IBM Plex Mono" font-size="9" fill="#00e5a0" opacity="0.6">λ₃</text>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <p class="hero-mono" id="hero-univ"></p>
+      <div class="hero-pillars">
+        <span class="hero-pillar hp-optical">Comunicações Ópticas</span>
+        <span class="hero-pillar hp-inst">Instrumentação</span>
+        <span class="hero-pillar hp-sensor">Sensores</span>
+      </div>
+      <h1 id="hero-title"></h1>
+      <p class="hero-desc" id="hero-desc"></p>
+      <div class="hero-cta">
+        <button class="btn-cyan" onclick="navTo('projetos')">Ver Projetos</button>
+        <button class="btn-ghost" onclick="navTo('contato')">Colaborar</button>
+      </div>
+      <div class="hero-stats" id="hero-stats"></div>
+    </div>
+  </section>
+
+  <section id="areas" class="areas-section">
+    <div class="areas-inner">
+      <div class="sec-header"><p class="sec-label">Expertise</p><h2 class="sec-title">Áreas de <em>Atuação</em></h2></div>
+      <div class="areas-grid">
+        <div class="area-card ac-optical">
+          <h3 class="area-title">Comunicações Ópticas</h3>
+          <p class="area-desc">Desenvolvimento e análise de sistemas de transmissão por fibra óptica (plásticas e sílica), sistemas ópticos sem fio (VLC, FSO) e processamento de sinais aplicados para aumento da capacidade de transmissão.</p>
+          <div class="area-topics"><span class="area-topic">WDM / DWDM</span><span class="area-topic">FSO</span><span class="area-topic">VLC</span><span class="area-topic">OWC</span><span class="area-topic">POF</span><span class="area-topic">Redes PON</span></div>
+        </div>
+        <div class="area-card ac-inst">
+          <h3 class="area-title">Instrumentação</h3>
+          <p class="area-desc">Instrumentação aplicada a Internet das Coisas, Agricultura 4.0, Indústria 4.0 e Integrated Sensing and Communication.</p>
+          <div class="area-topics"><span class="area-topic">IoT</span><span class="area-topic">AGRO</span><span class="area-topic">Interferometria</span><span class="area-topic">ISAC</span><span class="area-topic">Metrologia óptica</span><span class="area-topic">Calibração</span></div>
+        </div>
+        <div class="area-card ac-sensor">
+          <h3 class="area-title">Sensores</h3>
+          <p class="area-desc">Sensores a fibra óptica, interferométricos e em espaço livre para monitoramento estrutural, ambiental, segurança patrimonial, entre outros.</p>
+          <div class="area-topics"><span class="area-topic">FBG</span><span class="area-topic">Interferometria</span><span class="area-topic">LPG</span><span class="area-topic">EFBG</span><span class="area-topic">ISAC-FSO</span><span class="area-topic">Sensor de deformação</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projetos" class="std">
+    <div class="section-inner">
+      <div class="sec-header"><p class="sec-label">Pesquisa &amp; P&amp;D</p><h2 class="sec-title">Projetos em <em>Destaque</em></h2></div>
+      <div class="filter-bar">
+        <button class="f-btn active" onclick="fp('all',this)">Todos</button>
+        <button class="f-btn" onclick="fp('ongoing',this)">Em andamento</button>
+        <button class="f-btn" onclick="fp('completed',this)">Concluídos</button>
+        <button class="f-btn" onclick="fp('academic',this)">Acadêmico</button>
+        <button class="f-btn" onclick="fp('rd',this)">P&amp;D</button>
+      </div>
+      <div class="projects-grid" id="projects-grid"></div>
+      <div class="show-more-wrap" id="proj-more-wrap"></div>
+    </div>
+  </section>
+
+  <section id="equipe" class="std-alt">
+    <div class="section-inner">
+      <div class="sec-header"><p class="sec-label">Pesquisadores</p><h2 class="sec-title">Nossa <em>Equipe</em></h2></div>
+      <div id="team-container"></div>
+    </div>
+  </section>
+
+  <section id="publicacoes" class="std">
+    <div class="section-inner">
+      <div class="sec-header"><p class="sec-label">Produção Científica</p><h2 class="sec-title">Publicações <em>Recentes</em></h2></div>
+
+      <div class="pub-category">
+        <div class="pub-category-label">Artigos em Periódicos</div>
+        <div class="pub-list" id="pub-list-journal"></div>
+        <div class="show-more-wrap" id="pub-more-journal"></div>
+      </div>
+
+      <div class="pub-category">
+        <div class="pub-category-label">Trabalhos em Congressos</div>
+        <div class="pub-list" id="pub-list-conf"></div>
+        <div class="show-more-wrap" id="pub-more-conf"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="patentes" class="std-alt">
+    <div class="section-inner">
+      <div class="sec-header"><p class="sec-label">Propriedade Intelectual</p><h2 class="sec-title">Patentes &amp; <em>Tecnologias</em></h2></div>
+      <div class="patent-grid" id="patent-grid"></div>
+    </div>
+  </section>
+
+  <section id="parceiros" class="partners-wrap">
+    <div class="partners-inner">
+      <p class="partners-label">Ecossistema</p>
+      <h2 class="partners-title">Parceiros &amp; Financiadores</h2>
+      <div class="partner-groups" id="partner-groups"></div>
+    </div>
+  </section>
+
+  <section id="contato" class="contact-wrap">
+    <div class="contact-inner">
+      <div class="contact-lhs">
+        <h2>Pesquisa, P&amp;D<br>ou <em>parceria</em>?</h2>
+        <p>Estamos abertos a colaborações acadêmicas, projetos de P&amp;D com a indústria e intercâmbios internacionais em fotônica, comunicações ópticas e sensoriamento a fibra.</p>
+      </div>
+      <div class="contact-rhs" id="contact-rhs"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo"><span id="footer-sigla"></span> · Comunicações Ópticas, Instrumentação e Sensores</span>
+    <span class="footer-copy">© <span id="footer-year"></span> · <span id="footer-univ"></span> · Todos os direitos reservados</span>
+  </footer>
+</div>
+
+<!-- DETAIL VIEW -->
+<div id="view-detail">
+  <div class="detail-hero">
+    <div class="detail-inner">
+      <button class="back-btn" onclick="goBack()">Voltar aos Projetos</button>
+      <div class="detail-meta" id="detail-meta"></div>
+      <div class="detail-hero-layout" id="detail-hero-layout">
+        <div>
+          <h1 class="detail-title" id="detail-title"></h1>
+          <p class="detail-lead"  id="detail-lead"></p>
+        </div>
+        <div id="detail-hero-foto"></div>
+      </div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-grid">
+      <div id="detail-left"></div>
+      <aside class="detail-sidebar" id="detail-right"></aside>
+    </div>
+  </div>
+</div>
+
+<!-- Load content data -->
+<script src="data.js"></script>
+
+<script>
+/* ── RENDER MAIN PAGE ─────────────────────────────── */
+function renderMain() {
+  document.title = LAB.sigla + ' — ' + LAB.nomeCompleto;
+  document.getElementById('nav-sigla').textContent   = LAB.sigla;
+  document.getElementById('hero-univ').textContent   = LAB.universidade;
+  document.getElementById('hero-desc').style.display = 'none';
+  document.getElementById('footer-sigla').textContent = LAB.sigla;
+  document.getElementById('footer-year').textContent  = new Date().getFullYear();
+  document.getElementById('footer-univ').textContent  = LAB.universidade;
+
+  // Hero title (split for styling)
+  const parts = LAB.nomeCompleto.split(' ');
+  const mid = Math.floor(parts.length / 2);
+  document.getElementById('hero-title').innerHTML =
+    parts.slice(0, mid).join(' ') + '<br><span class="gold">' + parts.slice(mid).join(' ') + '</span>';
+
+  // Stats
+  // Stats calculados automaticamente dos arrays reais
+  const statsAuto = [
+    { label: 'Proj. em Andamento', valor: PROJETOS.filter(p => p.status === 'ongoing').length },
+    { label: 'Proj. Finalizados',  valor: PROJETOS.filter(p => p.status === 'completed').length },
+    { label: 'Pesquisadores',      valor: EQUIPE.filter(m => (m.categoria||'pesquisador') === 'pesquisador').length },
+    { label: 'Alunos',             valor: EQUIPE.filter(m => (m.categoria||'pesquisador') !== 'pesquisador').length },
+    { label: 'Publicações',        valor: (typeof PUBLICACOES !== 'undefined') ? PUBLICACOES.length : 0 },
+    { label: 'Patentes',           valor: (typeof PATENTES !== 'undefined') ? PATENTES.length : 0 },
+  ];
+  const statsEl = document.getElementById('hero-stats');
+  statsEl.innerHTML = statsAuto.map(s =>
+    `<div class="stat-item"><span class="stat-num">${s.valor}</span><span class="stat-label">${s.label}</span></div>`
+  ).join('');
+
+  renderProjects();
+  renderTeam();
+  renderPublications();
+  renderPatents();
+  renderPartners();
+  renderContact();
+}
+
+/* ── PROJECTS ─────────────────────────────────────── */
+function stripeClass(tipo, status) {
+  return `stripe-${tipo}-${status}`;
+}
+const PROJ_INICIAL = 6;   // quantos projetos mostrar inicialmente
+const PUB_INICIAL  = 5;   // quantas publicações mostrar inicialmente
+
+function anoInicio(periodo) {
+  // Extrai o ano de início do campo periodo (ex: "2023–atual" → 2023)
+  const m = (periodo || '').match(/(\d{4})/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function renderProjects() {
+  // Ordena: em andamento primeiro, depois por ano de início decrescente
+  const sorted = [...PROJETOS].sort((a, b) => {
+    if (a.status === 'ongoing' && b.status !== 'ongoing') return -1;
+    if (a.status !== 'ongoing' && b.status === 'ongoing') return 1;
+    return anoInicio(b.periodo) - anoInicio(a.periodo);
+  });
+
+  const grid = document.getElementById('projects-grid');
+  grid.innerHTML = sorted.map((p, i) => {
+    const chips = [
+      p.status === 'ongoing'
+        ? '<span class="chip chip-on">Em andamento</span>'
+        : '<span class="chip chip-done">Concluído</span>',
+      (p.tipo === 'rd' || p.tipo === 'both') ? '<span class="chip chip-rd">P&amp;D</span>' : '',
+      `<span class="chip-year">${p.periodo}</span>`,
+    ].join('');
+    const extra = i >= PROJ_INICIAL ? ' collapsed' : '';
+    return `
+      <div class="proj-card${extra}" data-type="${p.tipo}" data-status="${p.status}" data-index="${i}">
+        <div class="proj-stripe ${stripeClass(p.tipo, p.status)}"></div>
+        <div class="proj-body">
+          <div class="proj-meta">${chips}</div>
+          <h3 class="proj-title" onclick="openProject('${p.id}')">${p.titulo}</h3>
+          <p class="proj-desc">${p.resumo}</p>
+          <div class="proj-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="proj-footer">
+          <span class="proj-pi">${p.pi}</span>
+          <button class="proj-link" onclick="openProject('${p.id}')">Ver projeto</button>
+        </div>
+      </div>`;
+  }).join('');
+  projVisiveis = PROJ_INICIAL;
+  renderProjMoreBtn(projVisiveis);
+}
+
+function renderProjMoreBtn(visiveis) {
+  const total   = PROJETOS.length;
+  const ocultos = total - visiveis;
+  const wrap    = document.getElementById('proj-more-wrap');
+  if (ocultos <= 0) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <button class="show-more-btn" onclick="mostrarMaisProjetos()">
+      Ver mais projetos
+      <span class="count">+${Math.min(ocultos, 5)}</span>
+      <span class="arrow">↓</span>
+    </button>`;
+}
+
+let projVisiveis = PROJ_INICIAL;
+
+function mostrarMaisProjetos() {
+  projVisiveis = Math.min(projVisiveis + 5, PROJETOS.length);
+  document.querySelectorAll('.proj-card[data-index]').forEach(card => {
+    const i = parseInt(card.dataset.index);
+    if (i < projVisiveis) card.classList.remove('collapsed');
+  });
+  renderProjMoreBtn(projVisiveis);
+}
+
+/* ── TEAM ─────────────────────────────────────────── */
+function renderTeam() {
+  const CATEGORIAS = [
+    { key: 'pesquisador', label: 'Pesquisadores' },
+    { key: 'doutorando',  label: 'Doutorandos'  },
+    { key: 'mestrando',   label: 'Mestrandos'   },
+    { key: 'ic',          label: 'Iniciação Científica' },
+  ];
+
+  function memberCard(m) {
+    const avatar = m.foto
+      ? `<img src="${m.foto}" alt="${m.nome}" onerror="this.parentElement.innerHTML='${m.iniciais}'">`
+      : m.iniciais;
+    const inner = `
+        <div class="m-avatar">${avatar}</div>
+        <p class="m-name">${m.nome}</p>
+        <p class="m-role">${m.cargo}</p>
+        <p class="m-area">${m.area}</p>`;
+    const content = m.lattes
+      ? `<a class="member-link" href="${m.lattes}" target="_blank" rel="noopener" title="Ver Currículo Lattes">${inner}</a>`
+      : inner;
+    return `<div class="member">${content}</div>`;
+  }
+
+  let html = '';
+  for (const cat of CATEGORIAS) {
+    const membros = EQUIPE.filter(m => (m.categoria || 'pesquisador') === cat.key);
+    if (!membros.length) continue;
+    html += `
+      <div class="team-category">
+        <div class="team-category-label">${cat.label}</div>
+        <div class="team-grid">${membros.map(memberCard).join('')}</div>
+      </div>`;
+  }
+  // Membros sem categoria definida vão para Pesquisadores
+  document.getElementById('team-container').innerHTML = html;
+}
+
+/* ── PUBLICATIONS ─────────────────────────────────── */
+function parsePubVenue(veiculo) {
+  // Extrai DOI do campo veiculo e separa do nome do periódico
+  const doiMatch = veiculo.match(/DOI:\s*(10\.\S+)/i);
+  if (!doiMatch) return { venue: veiculo, doi: null };
+  const doi      = doiMatch[1].replace(/[.,;)]+$/, ''); // remove pontuação final
+  const journal  = veiculo.replace(/·?\s*DOI:\s*\S+/i, '').trim().replace(/·\s*$/, '').trim();
+  return { venue: journal, doi };
+}
+
+function pubItemHtml(p, i, idPrefix) {
+  const { venue, doi } = parsePubVenue(p.veiculo);
+  const doiUrl    = doi ? `https://doi.org/${doi}` : null;
+  const titleHtml = doiUrl
+    ? `<a href="${doiUrl}" target="_blank" rel="noopener">${p.titulo} ↗</a>`
+    : p.titulo;
+  const venueHtml = venue + (doi ? ` · <a class="pub-doi" href="${doiUrl}" target="_blank" rel="noopener">DOI: ${doi}</a>` : '');
+  const extra = i >= PUB_INICIAL ? ' collapsed' : '';
+  return `
+    <div class="pub-item${extra}" data-pub-index="${i}" data-pub-list="${idPrefix}">
+      <div>
+        <p class="pub-title">${titleHtml}</p>
+        <p class="pub-authors">${p.autores}</p>
+        <p class="pub-venue">${venueHtml}</p>
+      </div>
+      <span class="pub-year">${p.ano}</span>
+    </div>`;
+}
+
+function isJournal(p) {
+  // Tem DOI com padrão de periódico OU o veículo não parece evento/congresso
+  const v = (p.veiculo || '').toLowerCase();
+  const doi = (p.veiculo || '').match(/DOI:\s*(10\.\S+)/i)?.[1] || '';
+  const isConf = /congress|symposium|simp[oó]sio|confer[eê]ncia|conferenc|workshop|event|cbmag|momag|sbmo|sbrt|ieee.*conf|anais|procee/i.test(v);
+  const hasDoi = doi.length > 0;
+  // Se tem DOI e não parece congresso → periódico
+  if (hasDoi && !isConf) return true;
+  // Sem DOI mas parece periódico (journal, letters, transactions, review)
+  if (/journal|letters|transactions|review|magazine|sensor|optic|photonic|lightwave|express|technolog/i.test(v)) return true;
+  return false;
+}
+
+function renderPublications() {
+  const journals = PUBLICACOES.filter(p => isJournal(p));
+  const conf     = PUBLICACOES.filter(p => !isJournal(p));
+
+  document.getElementById('pub-list-journal').innerHTML = journals.map((p, i) => pubItemHtml(p, i, 'journal')).join('');
+  document.getElementById('pub-list-conf').innerHTML    = conf.map((p, i) => pubItemHtml(p, i, 'conf')).join('');
+
+  renderPubMoreBtn('journal', journals.length, PUB_INICIAL);
+  renderPubMoreBtn('conf',    conf.length,     PUB_INICIAL);
+  pubVisiveis = { journal: PUB_INICIAL, conf: PUB_INICIAL };
+}
+
+function renderPubMoreBtn(tipo, total, visiveis) {
+  const ocultos = total - visiveis;
+  const wrap = document.getElementById(`pub-more-${tipo}`);
+  if (!wrap) return;
+  if (ocultos <= 0) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <button class="show-more-btn" onclick="mostrarMaisPubs('${tipo}')">
+      Ver mais
+      <span class="count">+${Math.min(ocultos, 5)}</span>
+      <span class="arrow">↓</span>
+    </button>`;
+}
+
+let pubVisiveis = { journal: PUB_INICIAL, conf: PUB_INICIAL };
+
+function mostrarMaisPubs(tipo) {
+  const lista   = tipo === 'journal' ? PUBLICACOES.filter(p => isJournal(p)) : PUBLICACOES.filter(p => !isJournal(p));
+  pubVisiveis[tipo] = Math.min(pubVisiveis[tipo] + 5, lista.length);
+  document.querySelectorAll(`.pub-item[data-pub-list="${tipo}"]`).forEach(el => {
+    const i = parseInt(el.dataset.pubIndex);
+    if (i < pubVisiveis[tipo]) el.classList.remove('collapsed');
+  });
+  renderPubMoreBtn(tipo, lista.length, pubVisiveis[tipo]);
+}
+
+/* ── PATENTS ──────────────────────────────────────── */
+function renderPatents() {
+  document.getElementById('patent-grid').innerHTML = PATENTES.map(p => `
+    <div class="patent-item">
+      <div class="patent-ico">${p.emoji}</div>
+      <div>
+        <p class="patent-title">${p.titulo}</p>
+        <p class="patent-num">${p.numero}</p>
+        <span class="pat-chip ${p.status === 'granted' ? 'pat-granted' : 'pat-pending'}">
+          ${p.status === 'granted' ? 'Concedida' : 'Em análise'}
+        </span>
+      </div>
+    </div>`).join('');
+}
+
+/* ── PARTNERS ─────────────────────────────────────── */
+function renderPartners() {
+  const labels = { fomento:'Agências de Fomento', industrial:'Parceiros Industriais', academico:'Colaborações Acadêmicas' };
+  document.getElementById('partner-groups').innerHTML =
+    Object.entries(PARCEIROS).map(([k, arr]) => `
+      <div>
+        <p class="partner-group-label">${labels[k]}</p>
+        <div class="partner-row">${arr.map(n => `<span class="partner-pill">${n}</span>`).join('')}</div>
+      </div>`).join('');
+}
+
+/* ── CONTACT ──────────────────────────────────────── */
+function renderContact() {
+  document.getElementById('contact-rhs').innerHTML = `
+    <div class="c-item"><div class="c-icon">✉</div><div><span class="c-label">E-mail</span><span class="c-value">${LAB.email}</span></div></div>
+    <div class="c-item"><div class="c-icon">📍</div><div><span class="c-label">Localização</span><span class="c-value">${LAB.endereco}</span></div></div>
+    <div class="c-item"><div class="c-icon">🔗</div><div><span class="c-label">Lattes / ResearchGate / ORCID</span><span class="c-value">${LAB.lattes}</span></div></div>
+    <div class="c-item"><div class="c-icon">📞</div><div><span class="c-label">Telefone</span><span class="c-value">${LAB.telefone}</span></div></div>`;
+}
+
+/* ── FILTER ───────────────────────────────────────── */
+function fp(filter, btn) {
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Separa os cards que pertencem a este filtro
+  const cards = Array.from(document.querySelectorAll('.proj-card'));
+  const match = cards.filter(card => {
+    const type   = card.dataset.type;
+    const status = card.dataset.status;
+    return filter === 'all'       ? true :
+           filter === 'ongoing'   ? status === 'ongoing' :
+           filter === 'completed' ? status === 'completed' :
+           filter === 'academic'  ? (type === 'academic' || type === 'both') :
+           filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
+  });
+  const noMatch = cards.filter(c => !match.includes(c));
+
+  // Esconde os que não pertencem ao filtro
+  noMatch.forEach(c => { c.classList.add('hidden'); c.classList.remove('collapsed'); });
+
+  if (filter === 'all') {
+    // Volta ao estado inicial: mostra só os primeiros PROJ_INICIAL
+    match.forEach((c, i) => {
+      c.classList.remove('hidden');
+      if (i < PROJ_INICIAL) c.classList.remove('collapsed');
+      else                  c.classList.add('collapsed');
+    });
+    projVisiveis = PROJ_INICIAL;
+    renderProjMoreBtn(projVisiveis);
+  } else {
+    // Filtro ativo: aplica "ver mais" dentro do subconjunto filtrado
+    const LIMITE = PROJ_INICIAL;
+    match.forEach((c, i) => {
+      c.classList.remove('hidden');
+      if (i < LIMITE) c.classList.remove('collapsed');
+      else            c.classList.add('collapsed');
+    });
+
+    const wrap = document.getElementById('proj-more-wrap');
+    const ocultos = match.length - LIMITE;
+    if (ocultos <= 0) {
+      wrap.innerHTML = '';
+    } else {
+      // Guarda referência do filtro atual para o botão usar
+      wrap.dataset.filter = filter;
+      wrap.dataset.visiveis = LIMITE;
+      wrap.innerHTML = `
+        <button class="show-more-btn" onclick="mostrarMaisFiltro()">
+          Ver mais projetos
+          <span class="count">+${Math.min(ocultos, 5)}</span>
+          <span class="arrow">↓</span>
+        </button>`;
+    }
+  }
+}
+
+function mostrarMaisFiltro() {
+  const wrap    = document.getElementById('proj-more-wrap');
+  const filter  = wrap.dataset.filter;
+  let visiveis  = parseInt(wrap.dataset.visiveis);
+  visiveis      = visiveis + 5;
+  wrap.dataset.visiveis = visiveis;
+
+  const cards = Array.from(document.querySelectorAll('.proj-card')).filter(card => {
+    const type   = card.dataset.type;
+    const status = card.dataset.status;
+    return filter === 'ongoing'   ? status === 'ongoing' :
+           filter === 'completed' ? status === 'completed' :
+           filter === 'academic'  ? (type === 'academic' || type === 'both') :
+           filter === 'rd'        ? (type === 'rd'       || type === 'both') : true;
+  });
+
+  cards.forEach((c, i) => { if (i < visiveis) c.classList.remove('collapsed'); });
+
+  const ocultos = cards.length - visiveis;
+  if (ocultos <= 0) {
+    wrap.innerHTML = '';
+  } else {
+    wrap.innerHTML = `
+      <button class="show-more-btn" onclick="mostrarMaisFiltro()">
+        Ver mais projetos
+        <span class="count">+${Math.min(ocultos, 5)}</span>
+        <span class="arrow">↓</span>
+      </button>`;
+  }
+}
+
+/* ── ROUTER ───────────────────────────────────────── */
+function openProject(id) {
+  const p = PROJETOS.find(x => x.id === id);
+  if (!p) return;
+  window.location.hash = id;
+  renderDetail(p);
+  document.getElementById('view-main').style.display   = 'none';
+  document.getElementById('view-detail').style.display = 'block';
+  document.getElementById('view-detail').classList.add('detail-enter');
+  window.scrollTo(0, 0);
+}
+
+function goBack() { window.history.back(); }
+
+function goHome() {
+  window.location.hash = '';
+  document.getElementById('view-main').style.display   = 'block';
+  document.getElementById('view-detail').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+function navTo(id) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior:'smooth' });
+  }, 50);
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.replace('#', '');
+  const p = PROJETOS.find(x => x.id === hash);
+  if (p) {
+    renderDetail(p);
+    document.getElementById('view-main').style.display   = 'none';
+    document.getElementById('view-detail').style.display = 'block';
+    window.scrollTo(0, 0);
+  } else {
+    document.getElementById('view-main').style.display   = 'block';
+    document.getElementById('view-detail').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+});
+
+window.addEventListener('load', () => {
+  renderMain();
+  const hash = window.location.hash.replace('#', '');
+  if (hash && PROJETOS.find(x => x.id === hash)) openProject(hash);
+});
+
+/* ── RENDER DETAIL ────────────────────────────────── */
+function renderDetail(p) {
+  const statusChip = p.status === 'ongoing'
+    ? '<span class="chip chip-on">Em andamento</span>'
+    : '<span class="chip chip-done">Concluído</span>';
+  const typeChip = (p.tipo === 'rd' || p.tipo === 'both')
+    ? '<span class="chip chip-rd">P&amp;D</span>' : '';
+
+  document.getElementById('detail-meta').innerHTML   = statusChip + typeChip + `<span class="chip-year">${p.periodo}</span>`;
+  document.getElementById('detail-title').textContent = p.titulo;
+  document.getElementById('detail-lead').textContent  = p.descricao;
+
+  // ── Foto no hero (opcional) ───────────────────────────
+  const fotoEl    = document.getElementById('detail-hero-foto');
+  const layoutEl  = document.getElementById('detail-hero-layout');
+  if (p.foto_destaque) {
+    fotoEl.innerHTML = `
+      <div class="detail-hero-foto">
+        <img src="${p.foto_destaque.src}" alt="${p.foto_destaque.legenda || p.titulo}" loading="lazy">
+        ${p.foto_destaque.legenda ? `<p class="detail-hero-foto-caption">${p.foto_destaque.legenda}</p>` : ''}
+      </div>`;
+    layoutEl.classList.remove('no-foto');
+  } else {
+    fotoEl.innerHTML = '';
+    layoutEl.classList.add('no-foto');
+  }
+
+  let left = '';
+
+  // ── Linha do tempo ────────────────────────────────────
+  if (p.marcos && p.marcos.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Linha do Tempo</p>
+      <div class="timeline">
+        ${p.marcos.map(m => `
+          <div class="tl-item">
+            <div class="tl-date">${m.data || ''}</div>
+            <div class="tl-spine">
+              <div class="tl-dot${m.concluido ? ' done' : ''}"></div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-content">
+              <p class="tl-title">${m.titulo}</p>
+              ${m.texto ? `<p class="tl-text">${m.texto}</p>` : ''}
+              ${m.imagens && m.imagens.length ? `
+                <div class="tl-images">
+                  ${m.imagens.map(img => `
+                    <div class="tl-img">
+                      <img src="${img.src}" alt="${img.legenda || ''}" loading="lazy">
+                      ${img.legenda ? `<p class="tl-img-caption">${img.legenda}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── Links úteis ───────────────────────────────────────
+  if (p.links && p.links.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Links</p>
+      <div class="proj-links">
+        ${p.links.map(l => `<a class="proj-ext-link" href="${l.url}" target="_blank" rel="noopener">${l.icone || '🔗'} ${l.label}</a>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── Seções textuais ───────────────────────────────────
+  if (p.objetivos && p.objetivos.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Objetivos</p>
+      <ul>${p.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+    </div>`;
+  }
+  if (p.metodologia) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Metodologia</p>
+      <p>${p.metodologia}</p>
+    </div>`;
+  }
+  if (p.resultados && p.resultados.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Resultados ${p.status === 'ongoing' ? 'Parciais' : 'Alcançados'}</p>
+      <ul>${p.resultados.map(r => `<li>${r}</li>`).join('')}</ul>
+    </div>`;
+  }
+  if (p.publicacoes && p.publicacoes.length) {
+    left += `<div class="detail-section">
+      <p class="detail-section-label">Publicações Relacionadas</p>
+      ${p.publicacoes.map(pub => `
+        <div class="rel-pub">
+          <p class="rel-pub-title">${pub.titulo}</p>
+          <p class="rel-pub-meta">${pub.veiculo}</p>
+        </div>`).join('')}
+    </div>`;
+  }
+  left += `<div class="detail-section">
+    <p class="detail-section-label">Palavras-chave</p>
+    <div class="detail-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+  </div>`;
+  document.getElementById('detail-left').innerHTML = left;
+
+  // ── Sidebar ───────────────────────────────────────────
+  let right = `
+    <div class="sidebar-card">
+      <p class="sidebar-title">Progresso</p>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>${p.status === 'completed' ? 'Concluído' : 'Em andamento'}</span>
+          <span>${p.progresso}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${p.progresso}%"></div></div>
+      </div>
+    </div>
+    <div class="sidebar-card gold-top">
+      <p class="sidebar-title">Informações</p>
+      <div class="sidebar-item"><strong>Período</strong><span>${p.periodo}</span></div>
+      <div class="sidebar-item"><strong>Coordenador</strong><span>${p.pi}</span></div>
+      <div class="sidebar-item"><strong>Financiamento</strong><span>${p.fomento}</span></div>
+    </div>
+    <div class="sidebar-card green-top">
+      <p class="sidebar-title">Equipe do Projeto</p>
+      ${p.equipe.map(m => `<div class="sidebar-item"><span>${m}</span></div>`).join('')}
+    </div>`;
+  document.getElementById('detail-right').innerHTML = right;
+}
+</script>
+</body>
+</html>
