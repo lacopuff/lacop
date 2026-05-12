@@ -1449,11 +1449,16 @@ const PROJETOS = [
     metodologia: "",
     resultados:  [],
     publicacoes: [],
-            marcos: [
+                    marcos: [
       {
         data:      "Março 2026",
         titulo:    "Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior",
         concluido: true,
+      },
+      {
+        data:      "Fevereiro 2026",
+        titulo:    "Aluna Bettina Fanzeres Cordoniz Buckingham Maia inicia o Doutorado Sanduíche",
+        concluido: false,
       },
     ],
       foto_destaque: {
