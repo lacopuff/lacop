@@ -227,13 +227,13 @@
     .back-btn { font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.5); background:transparent; border:1px solid rgba(255,255,255,0.2); padding:.4rem 1rem; border-radius:2px; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; transition:color .2s,border-color .2s; margin-bottom:2rem; }
     .back-btn::before { content:'←'; }
     .back-btn:hover { color:#7eb8e8; border-color:#7eb8e8; }
-    .detail-meta  { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1.25rem; }
-    .detail-hero-layout { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+    .detail-meta  { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1rem; }
+    .detail-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:500; line-height:1.2; color:#ffffff; margin-bottom:1.5rem; padding-bottom:1.25rem; border-bottom:1px solid rgba(255,255,255,0.1); }
+    .detail-hero-layout { display:grid; grid-template-columns:1fr 280px; gap:2rem; align-items:start; }
     .detail-hero-layout.no-foto { grid-template-columns:1fr; }
-    .detail-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:500; line-height:1.2; color:#ffffff; margin-bottom:1rem; }
-    .detail-lead  { font-size:1.05rem; color:rgba(255,255,255,0.6); max-width:720px; line-height:1.75; }
-    .detail-hero-foto { width:240px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); }
-    .detail-hero-foto img { width:100%; height:160px; object-fit:cover; display:block; }
+    .detail-lead  { font-size:1rem; color:rgba(255,255,255,0.6); line-height:1.8; }
+    .detail-hero-foto { border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); max-width:900px; }
+    .detail-hero-foto img { width:100%; max-width:900px; max-height:500px; object-fit:cover; display:block; }
     .detail-hero-foto-caption { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:rgba(255,255,255,0.35); padding:.4rem .7rem; background:rgba(0,0,0,0.2); line-height:1.4; }
     .detail-body  { max-width:960px; margin:0 auto; padding:3rem 2rem 5rem; }
     .detail-grid  { display:grid; grid-template-columns:1fr 300px; gap:3rem; align-items:start; }
@@ -476,11 +476,9 @@
     <div class="detail-inner">
       <button class="back-btn" onclick="goBack()">Voltar aos Projetos</button>
       <div class="detail-meta" id="detail-meta"></div>
+      <h1 class="detail-title" id="detail-title"></h1>
       <div class="detail-hero-layout" id="detail-hero-layout">
-        <div>
-          <h1 class="detail-title" id="detail-title"></h1>
-          <p class="detail-lead"  id="detail-lead"></p>
-        </div>
+        <p class="detail-lead" id="detail-lead"></p>
         <div id="detail-hero-foto"></div>
       </div>
     </div>
@@ -502,7 +500,7 @@ function renderMain() {
   document.title = LAB.sigla + ' — ' + LAB.nomeCompleto;
   document.getElementById('nav-sigla').textContent   = LAB.sigla;
   document.getElementById('hero-univ').textContent   = LAB.universidade;
-  document.getElementById('hero-desc').style.display = 'none';
+  document.getElementById('hero-desc').textContent   = LAB.descricao;
   document.getElementById('footer-sigla').textContent = LAB.sigla;
   document.getElementById('footer-year').textContent  = new Date().getFullYear();
   document.getElementById('footer-univ').textContent  = LAB.universidade;
@@ -514,18 +512,10 @@ function renderMain() {
     parts.slice(0, mid).join(' ') + '<br><span class="gold">' + parts.slice(mid).join(' ') + '</span>';
 
   // Stats
-  // Stats calculados automaticamente dos arrays reais
-  const statsAuto = [
-    { label: 'Proj. em Andamento', valor: PROJETOS.filter(p => p.status === 'ongoing').length },
-    { label: 'Proj. Finalizados',  valor: PROJETOS.filter(p => p.status === 'completed').length },
-    { label: 'Pesquisadores',      valor: EQUIPE.filter(m => (m.categoria||'pesquisador') === 'pesquisador').length },
-    { label: 'Alunos',             valor: EQUIPE.filter(m => (m.categoria||'pesquisador') !== 'pesquisador').length },
-    { label: 'Publicações',        valor: (typeof PUBLICACOES !== 'undefined') ? PUBLICACOES.length : 0 },
-    { label: 'Patentes',           valor: (typeof PATENTES !== 'undefined') ? PATENTES.length : 0 },
-  ];
   const statsEl = document.getElementById('hero-stats');
-  statsEl.innerHTML = statsAuto.map(s =>
-    `<div class="stat-item"><span class="stat-num">${s.valor}</span><span class="stat-label">${s.label}</span></div>`
+  const labels = { projetos:'Projetos', pesquisadores:'Pesquisadores', publicacoes:'Publicações', patentes:'Patentes', parceiros:'Parceiros' };
+  statsEl.innerHTML = Object.entries(LAB.stats).map(([k,v]) =>
+    `<div class="stat-item"><span class="stat-num">${v}</span><span class="stat-label">${labels[k]}</span></div>`
   ).join('');
 
   renderProjects();
