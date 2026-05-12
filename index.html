@@ -229,11 +229,11 @@
     .back-btn:hover { color:#7eb8e8; border-color:#7eb8e8; }
     .detail-meta  { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:1rem; }
     .detail-title { font-family:'Fraunces',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:500; line-height:1.2; color:#ffffff; margin-bottom:1.5rem; padding-bottom:1.25rem; border-bottom:1px solid rgba(255,255,255,0.1); }
-    .detail-hero-layout { display:grid; grid-template-columns:1fr 560px; gap:2rem; align-items:start; }
-    .detail-hero-layout.no-foto { grid-template-columns:1fr; }
+    .detail-hero-layout { display:block; overflow:hidden; }
+    .detail-hero-layout.no-foto { display:block; }
     .detail-lead  { font-size:1rem; color:rgba(255,255,255,0.6); line-height:1.8; }
-    .detail-hero-foto { border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); max-width:900px; }
-    .detail-hero-foto img { width:100%; max-width:900px; max-height:500px; object-fit:cover; display:block; }
+    .detail-hero-foto { float:right; margin:0 0 1rem 2rem; border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); width:45%; max-width:500px; }
+    .detail-hero-foto img { width:100%; max-height:500px; object-fit:cover; display:block; }
     .detail-hero-foto-caption { font-family:'IBM Plex Mono',monospace; font-size:.65rem; color:rgba(255,255,255,0.35); padding:.4rem .7rem; background:rgba(0,0,0,0.2); line-height:1.4; }
     .detail-body  { max-width:960px; margin:0 auto; padding:3rem 2rem 5rem; }
     .detail-grid  { display:grid; grid-template-columns:1fr 300px; gap:3rem; align-items:start; }
@@ -478,8 +478,8 @@
       <div class="detail-meta" id="detail-meta"></div>
       <h1 class="detail-title" id="detail-title"></h1>
       <div class="detail-hero-layout" id="detail-hero-layout">
-        <p class="detail-lead" id="detail-lead"></p>
         <div id="detail-hero-foto"></div>
+        <p class="detail-lead" id="detail-lead"></p>
       </div>
     </div>
   </div>
