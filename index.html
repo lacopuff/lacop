@@ -563,7 +563,7 @@ function renderProjects() {
         <div class="proj-body">
           <div class="proj-meta">${chips}</div>
           <h3 class="proj-title" onclick="openProject('${p.id}')">${p.titulo}</h3>
-          <p class="proj-desc">${p.resumo}</p>
+          <p class="proj-desc">${p.resumo && p.resumo.length > 200 ? p.resumo.slice(0,200).trimEnd() + '…' : (p.resumo || '')}</p>
           <div class="proj-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
         </div>
         <div class="proj-footer">
