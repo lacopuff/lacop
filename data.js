@@ -1438,24 +1438,28 @@ const PROJETOS = [
     status:      "ongoing",
     tipo:        "academic",
     periodo:     "2025–atual",
-    resumo:      "Este projeto foca no desenvolvimento de tecnologias para comunicação sem fio utilizando Comunicação por Luz Visível (VLC, do inglês &quot;Visible Light Communication&quot;) e Comunicação Óptica em Esp",
+    resumo: "O projeto desenvolve tecnologias para comunicação óptica sem fio, explorando Comunicação por Luz Visível (VLC) e Comunicação Óptica em Espaço Livre (FSO) como alternativas aos sistemas sem fio tradicionais. Essas técnicas podem atender às demandas das redes 6G em aplicações como Realidade Aumentada, Internet das Coisas, comunicação veicular e transporte inteligente. Serão investigadas técnicas de acesso múltiplo, como RSMA, para ampliar a capacidade do sistema e superar limitações de largura de banda . Também serão estudadas antenas ópticas para aumentar o campo de visão dos receptores. Nos sistemas FSO, serão desenvolvidas técnicas de rastreamento de feixe baseadas em aprendizado de máquina, visando maior confiabilidade frente a desalinhamentos, obstruções e efeitos atmosféricos.",
     descricao:   "Este projeto foca no desenvolvimento de tecnologias para comunicação sem fio utilizando Comunicação por Luz Visível (VLC, do inglês &quot;Visible Light Communication&quot;) e Comunicação Óptica em Espaço Livre (FSO, do inglês &quot;Free-Space Optical Communication&quot;). O objetivo é melhorar a capacidade, eficiência e confiabilidade dessas tecnologias de comunicação para a próxima geração de redes de comunicações móveis (6G). VLC e FSO são vistas como soluções potenciais para superar as limitações dos sistemas sem fio tradicionais, especialmente no contexto de aplicações emergentes como Realidade Aumentada, Internet das Coisas (IoT) e Sistemas de Transporte Inteligente. O Projeto pretende aprimorar as capacidades dos enlaces VLC e FSO por meio de abordagens teóricas e experimentais, com foco em técnicas de acesso múltiplo, aprendizado de máquina, protocolos adaptativos, antenas ópticas, entre outros. O projeto pretende explorar o potencial da VLC para fornecer, simultaneamente, comunicação de dados e iluminação. Com esse objetivo pretende-se aumentar a largura de banda limitada pela modulação e a potência óptica máxima dos LEDs através da técnica de múltiplo acesso com Divisão de Taxas (RSMA). Nesse cenário é também importante implementar antenas ópticas para ampliar o campo de visão do sistema. Já para FSO, uma vez que é suscetível a condições atmosféricas e obstáculos, pretende-se aqui enfrentar esses desafios desenvolvendo técnicas de rastreamento de feixe óptico usando algoritmos de aprendizado de máquina, especificamente Redes Neurais Artificiais (RNA). Além disso, desenvolver em conjunto um sistema LIDAR que agrega ao sistema de comunicação uma capacidade de sensoriamento, importante para aplicação de comunicação veicular e detecção de pessoas.",
     pi:          "Vinicius Nunes Henrique Silva",
     fomento:     "Conselho Nacional de Desenvolvimento Científico e Tecnológico",
-    progresso:   50,
+    progresso: 50,
     equipe:      ["Vinicius Nunes Henrique Silva (Coordenador)", "Andres Pablo Lopez Barbero", "Hypolito José Kalinowski", "Maria do Carmo Raposo de Medeiros", "Paulo Miguel Nepomuceno Pereira Monteiro", "Fernando Pedro Pereira Guioma", "Roberto Brauer Di Renna", "Paulo André"],
     tags:        [],
     objetivos:   [],
     metodologia: "",
     resultados:  [],
     publicacoes: [],
-        marcos: [
+            marcos: [
       {
-        data:      "Março 2025",
+        data:      "Março 2026",
         titulo:    "Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior",
         concluido: true,
       },
     ],
+      foto_destaque: {
+      src:     "fotos/p27/VLC_FSO_CNPq.png",
+      legenda: "",
+    },
 },
   {
     id:          "p28",
