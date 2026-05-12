@@ -13,7 +13,7 @@ EXECUÇÃO (na pasta do repositório):
 """
 
 import streamlit as st
-import re, shutil, subprocess
+import re, json, os, shutil, subprocess
 from pathlib import Path
 from datetime import datetime
 
@@ -380,11 +380,10 @@ def git_commit_push(mensagem):
     try:
         subprocess.run(["git", "add", "data.js", "fotos/"], capture_output=True)
         r_commit = subprocess.run(["git", "commit", "-m", mensagem], capture_output=True, text=True)
-        out = (r_commit.stdout or "") + (r_commit.stderr or "")
-        if "nothing to commit" in out:
+        if "nothing to commit" in r_commit.stdout:
             return True, "Nenhuma alteração para publicar."
         r_push = subprocess.run(["git", "push"], capture_output=True, text=True)
-        return r_push.returncode == 0, r_push.stderr or r_push.stdout or "OK"
+        return r_push.returncode == 0, r_push.stderr or "OK"
     except Exception as e:
         return False, str(e)
 
@@ -489,7 +488,13 @@ def main():
 
         with col2:
             st.markdown("**Resumo** — texto curto exibido no card do projeto")
-            resumo = st.text_area("Resumo", value=proj.get("resumo",""), height=110, label_visibility="collapsed")
+            resumo = st.text_area("Resumo", value=proj.get("resumo",""), height=220,
+                                  label_visibility="collapsed",
+                                  max_chars=2000,
+                                  key=f"resumo_{proj['id']}")
+            chars = len(resumo)
+            cor   = "red" if chars > 1800 else "orange" if chars > 1500 else "gray"
+            st.markdown(f"<small style='color:{cor}'>{chars}/2000 caracteres</small>", unsafe_allow_html=True)
 
             st.markdown("**Progresso**")
             progresso = st.slider("", 0, 100, value=proj.get("progresso", 50),
