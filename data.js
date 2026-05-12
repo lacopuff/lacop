@@ -1449,12 +1449,7 @@ const PROJETOS = [
     metodologia: "",
     resultados:  [],
     publicacoes: [],
-                    marcos: [
-      {
-        data:      "Março 2026",
-        titulo:    "Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior",
-        concluido: true,
-      },
+                        marcos: [
       {
         data:      "Fevereiro 2026",
         titulo:    "Aluna Bettina Fanzeres Cordoniz Buckingham Maia inicia o Doutorado Sanduíche",
