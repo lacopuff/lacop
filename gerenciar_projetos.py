@@ -187,7 +187,35 @@ def carregar_projetos():
 # ═══════════════════════════════════════════════════════
 
 def esc(s):
-    return str(s).replace('\\', '\\\\').replace('"', '\\"')
+    return (str(s)
+            .replace('\\', '\\\\')
+            .replace('"', '\\"')
+            .replace('\n', ' ')
+            .replace('\r', '')
+            .strip())
+
+
+def substituir_campo_str(proj_text, nome, novo_valor):
+    """Substitui o valor de um campo string de forma robusta,
+    lidando com qualquer caractere especial no texto original."""
+    m = re.search(rf'{nome}:\s*"', proj_text)
+    if not m:
+        # Campo não existe — insere antes do } final
+        return proj_text[:-1] + f'  {nome}: "{esc(novo_valor)}",\n}}'
+    inicio = m.end()   # posição logo após a aspas de abertura
+    # Varre até a aspas de fechamento, ignorando \" escapadas
+    i = inicio
+    while i < len(proj_text):
+        if proj_text[i] == '\\':
+            i += 2     # pula caractere escapado
+            continue
+        if proj_text[i] == '"':
+            fim = i
+            break
+        i += 1
+    else:
+        return proj_text  # não encontrou fechamento — não altera
+    return proj_text[:inicio] + esc(novo_valor) + proj_text[fim:]
 
 
 def foto_to_js(foto, ind="    "):
@@ -316,11 +344,7 @@ def salvar_campos(proj_id, campos):
 
     # resumo
     if "resumo" in campos:
-        proj_text = re.sub(
-            r'resumo:\s*"(?:[^"\\]|\\.)*"',
-            f'resumo: "{esc(campos["resumo"])}"',
-            proj_text
-        )
+        proj_text = substituir_campo_str(proj_text, "resumo", campos["resumo"])
 
     # progresso
     if "progresso" in campos:
