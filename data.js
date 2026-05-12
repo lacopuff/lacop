@@ -1449,15 +1449,20 @@ const PROJETOS = [
     metodologia: "",
     resultados:  [],
     publicacoes: [],
-                            marcos: [
+                                                marcos: [
+      {
+        data:      "Janeiro 2026",
+        titulo:    "Prof. DSc. Roberto Brauer Di Renna inicia Pós-Doutorada no Instituto de Telecomunicações (Aveiro, Portugal)",
+        concluido: false,
+      },
       {
         data:      "Fevereiro 2026",
-        titulo:    "Aluna Bettina Fanzeres Cordoniz Buckingham Maia inicia o Doutorado Sanduíche",
+        titulo:    "Aluna Bettina Fanzeres Cordoniz Buckingham Maia inicia o Doutorado Sanduíche no Instituto de Telecomunicações (Coimbra, Portugal)",
         concluido: false,
       },
       {
         data:      "Março 2026",
-        titulo:    "Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior",
+        titulo:    " Prof. DSc. Vinicius N. Henrique Silva realiza o Estágio Sênior no Instituto de Telecomunicações (Coimbra, Portugal)",
         concluido: true,
       },
     ],
