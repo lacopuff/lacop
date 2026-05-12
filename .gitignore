@@ -15,8 +15,8 @@ build/
 # Streamlit
 .streamlit/secrets.toml
 
-# backups locais do app (opcional: versionar se quiser)
-# data_backup_*.js
+# backups locais do gerenciador (não versionar)
+data_backup_*.js
 
 # OS
 .DS_Store
