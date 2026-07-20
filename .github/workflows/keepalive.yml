@@ -1,0 +1,15 @@
+name: Keep Workflows Alive
+
+on:
+  schedule:
+    - cron: '0 8 1 * *'  # todo dia 1 de cada mês às 8h UTC
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
